@@ -27,9 +27,11 @@ export function Navbar() {
             </a>
           </nav>
           <div className="flex items-center gap-2">
-            <Button variant="ghost" onClick={() => window.open('/resume.pdf', '_blank')}>
-              Resume
-            </Button>
+            <a className="inline-flex" href="/resume.pdf" download aria-label="Download resume PDF">
+              <Button variant="ghost" type="button">
+                Resume
+              </Button>
+            </a>
           </div>
         </div>
       </Container>
