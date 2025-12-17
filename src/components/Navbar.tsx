@@ -1,5 +1,6 @@
 import { Container } from './Container'
 import { Button } from './Button'
+import { profile } from '../content/load'
 
 export function Navbar() {
   const scrollTo = (id: string) => {
@@ -14,7 +15,7 @@ export function Navbar() {
           <a href="/" className="font-semibold no-underline">
             <span className="inline-flex items-center gap-2">
               <span className="inline-block h-2.5 w-2.5 rounded-full bg-accent-violet" />
-              <span>Portfolio</span>
+              <span>{profile.name}</span>
             </span>
           </a>
           <nav className="hidden items-center gap-2 sm:flex">
