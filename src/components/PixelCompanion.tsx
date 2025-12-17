@@ -1,7 +1,14 @@
 import { useEffect, useState } from 'react'
 
-// Import the character image
+// Import the character image and walk frames
 import characterImg from '../assets/pixel/character.png'
+import walk00 from '../assets/pixel/walk_00.png'
+import walk01 from '../assets/pixel/walk_01.png'
+import walk02 from '../assets/pixel/walk_02.png'
+import walk03 from '../assets/pixel/walk_03.png'
+
+const WALK_FRAMES = [walk00, walk01, walk02, walk03]
+const NUM_WALK_FRAMES = WALK_FRAMES.length
 
 interface PixelCompanionProps {
   ageProgress: number // 0.0 = youngest (oldest events), 1.0 = oldest (most recent)
@@ -10,6 +17,7 @@ interface PixelCompanionProps {
 
 export function PixelCompanion({ ageProgress, scrollProgress }: PixelCompanionProps) {
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
+  const [walkFrame, setWalkFrame] = useState(0)
   const [viewportHeight, setViewportHeight] = useState(typeof window !== 'undefined' ? window.innerHeight : 800)
 
   useEffect(() => {
@@ -32,6 +40,22 @@ export function PixelCompanion({ ageProgress, scrollProgress }: PixelCompanionPr
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
+  // Animate walking cycle when scrolling
+  useEffect(() => {
+    if (prefersReducedMotion) return
+
+    // Only animate walking when scrolling (not at the very top)
+    if (scrollProgress > 0.02) {
+      const interval = setInterval(() => {
+        setWalkFrame((prev) => (prev + 1) % NUM_WALK_FRAMES)
+      }, 200) // Walk animation speed (200ms per frame)
+
+      return () => clearInterval(interval)
+    } else {
+      setWalkFrame(0)
+    }
+  }, [scrollProgress, prefersReducedMotion])
+
   // Fixed left position - character walks straight down, no horizontal movement
   const fixedLeftPosition = 24 // pixels from left edge
 
@@ -45,6 +69,10 @@ export function PixelCompanion({ ageProgress, scrollProgress }: PixelCompanionPr
     ? 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1))'
     : `brightness(${0.95 + ageProgress * 0.1}) contrast(${1.0 - ageProgress * 0.05}) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1))`
 
+  // Select frame: use walking animation when scrolling, static character at top
+  const isWalking = scrollProgress > 0.02 && !prefersReducedMotion
+  const displayFrame = isWalking ? WALK_FRAMES[walkFrame] : characterImg
+
   return (
     <aside
       className="pointer-events-none fixed z-30 hidden lg:block"
@@ -53,12 +81,16 @@ export function PixelCompanion({ ageProgress, scrollProgress }: PixelCompanionPr
         top: `${topOffset}px`,
         transition: prefersReducedMotion ? 'none' : 'top 0.05s linear, filter 0.3s ease-out',
       }}
-      aria-label="Scroll-driven character that ages as you progress through the timeline"
+      aria-label="Scroll-driven character that ages and walks as you progress through the timeline"
     >
       <div className="relative">
         <img
-          src={characterImg}
-          alt={`Character at age progress ${(ageProgress * 100).toFixed(0)}%`}
+          src={displayFrame}
+          alt={
+            isWalking
+              ? `Character walking (age progress ${(ageProgress * 100).toFixed(0)}%)`
+              : `Character at age progress ${(ageProgress * 100).toFixed(0)}%`
+          }
           className="h-auto w-16 object-contain"
           style={{
             imageRendering: 'pixelated',
