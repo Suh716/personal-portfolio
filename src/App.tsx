@@ -62,14 +62,21 @@ function App() {
           </Container>
         </section>
 
+        <section id="experience" className="py-16">
+          <Container>
+            <h2 className="text-2xl font-semibold tracking-tight">Experience</h2>
+            <p className="mt-2 text-ink-900/70">This will become a timeline with expandable details.</p>
+          </Container>
+        </section>
+
         <section id="projects" className="py-16">
           <Container>
             <h2 className="text-2xl font-semibold tracking-tight">Projects</h2>
-            <p className="mt-2 text-ink-900/70">This section will become a filterable grid backed by JSON.</p>
-            <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <p className="mt-2 text-ink-900/70">This section will become a filterable list backed by JSON.</p>
+            <div className="mt-6 space-y-4">
               {Array.from({ length: 6 }).map((_, i) => (
                 <div key={i} className="rounded-2xl border border-ink-900/10 bg-paper-100 p-5 shadow-soft">
-                  <div className="flex items-center justify-between">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
                     <span className="text-sm font-semibold">Project #{i + 1}</span>
                     <span className="text-xs text-ink-900/60">2025</span>
                   </div>
@@ -77,13 +84,6 @@ function App() {
                 </div>
               ))}
             </div>
-          </Container>
-        </section>
-
-        <section id="experience" className="py-16">
-          <Container>
-            <h2 className="text-2xl font-semibold tracking-tight">Experience</h2>
-            <p className="mt-2 text-ink-900/70">This will become a timeline with expandable details.</p>
           </Container>
         </section>
 
