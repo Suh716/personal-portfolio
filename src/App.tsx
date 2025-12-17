@@ -2,14 +2,19 @@ import { Container } from './components/Container'
 import { Footer } from './components/Footer'
 import { Navbar } from './components/Navbar'
 import { Button } from './components/Button'
+import { PixelCompanion } from './components/PixelCompanion'
+import { useScrollAge } from './hooks/useScrollAge'
 import { experience, profile, projects, qualifications } from './content/load'
 
 function App() {
+  const ageProgress = useScrollAge()
+
   return (
     <div className="min-h-screen bg-paper-50">
       <div className="pointer-events-none fixed inset-x-0 top-0 h-40 bg-gradient-to-b from-accent-violet/10 via-accent-cyan/5 to-transparent" />
 
       <Navbar />
+      <PixelCompanion ageProgress={ageProgress} />
 
       <main>
         <section className="py-16 sm:py-24">
