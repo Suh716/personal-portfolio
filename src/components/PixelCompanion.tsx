@@ -19,6 +19,8 @@ export function PixelCompanion({ ageProgress, scrollProgress }: PixelCompanionPr
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
   const [walkFrame, setWalkFrame] = useState(0)
   const [viewportHeight, setViewportHeight] = useState(typeof window !== 'undefined' ? window.innerHeight : 800)
+  const [targetPosition, setTargetPosition] = useState(0) // Target scroll position
+  const [currentPosition, setCurrentPosition] = useState(0) // Current character position (with delay)
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
@@ -40,12 +42,41 @@ export function PixelCompanion({ ageProgress, scrollProgress }: PixelCompanionPr
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
-  // Animate walking cycle when scrolling
+  // Update target position when scroll changes
+  useEffect(() => {
+    setTargetPosition(scrollProgress)
+  }, [scrollProgress])
+
+  // Animate character position to catch up to target (with delay)
+  useEffect(() => {
+    if (prefersReducedMotion) {
+      setCurrentPosition(targetPosition)
+      return
+    }
+
+    const catchUpSpeed = 0.15 // How fast character catches up (0.15 = smooth, slower catch-up)
+    const interval = setInterval(() => {
+      setCurrentPosition((prev) => {
+        const diff = targetPosition - prev
+        // If difference is small, snap to target, otherwise ease towards it
+        if (Math.abs(diff) < 0.001) {
+          return targetPosition
+        }
+        return prev + diff * catchUpSpeed
+      })
+    }, 16) // ~60fps
+
+    return () => clearInterval(interval)
+  }, [targetPosition, prefersReducedMotion])
+
+  // Animate walking cycle when character is catching up
   useEffect(() => {
     if (prefersReducedMotion) return
 
-    // Only animate walking when scrolling (not at the very top)
-    if (scrollProgress > 0.02) {
+    // Only animate walking when character is moving (catching up to scroll position)
+    const isMoving = Math.abs(targetPosition - currentPosition) > 0.01
+
+    if (isMoving && scrollProgress > 0.02) {
       const interval = setInterval(() => {
         setWalkFrame((prev) => (prev + 1) % NUM_WALK_FRAMES)
       }, 200) // Walk animation speed (200ms per frame)
@@ -54,23 +85,23 @@ export function PixelCompanion({ ageProgress, scrollProgress }: PixelCompanionPr
     } else {
       setWalkFrame(0)
     }
-  }, [scrollProgress, prefersReducedMotion])
+  }, [targetPosition, currentPosition, scrollProgress, prefersReducedMotion])
 
   // Fixed left position - character walks straight down, no horizontal movement
   const fixedLeftPosition = 24 // pixels from left edge
 
-  // Vertical position: follows scroll position (character moves down as you scroll)
+  // Vertical position: use currentPosition (with delay) instead of scrollProgress
   const navbarHeight = 64
   const maxScrollDistance = viewportHeight - navbarHeight - 150 // Leave some space at bottom
-  const topOffset = navbarHeight + 20 + scrollProgress * maxScrollDistance
+  const topOffset = navbarHeight + 20 + currentPosition * maxScrollDistance
 
   // Apply subtle aging effect via CSS filter (brightness/contrast changes)
   const ageFilter = prefersReducedMotion
     ? 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1))'
     : `brightness(${0.95 + ageProgress * 0.1}) contrast(${1.0 - ageProgress * 0.05}) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1))`
 
-  // Select frame: use walking animation when scrolling, static character at top
-  const isWalking = scrollProgress > 0.02 && !prefersReducedMotion
+  // Select frame: use walking animation when catching up, static character when at target
+  const isWalking = Math.abs(targetPosition - currentPosition) > 0.01 && scrollProgress > 0.02 && !prefersReducedMotion
   const displayFrame = isWalking ? WALK_FRAMES[walkFrame] : characterImg
 
   return (
@@ -79,7 +110,7 @@ export function PixelCompanion({ ageProgress, scrollProgress }: PixelCompanionPr
       style={{
         left: `${fixedLeftPosition}px`,
         top: `${topOffset}px`,
-        transition: prefersReducedMotion ? 'none' : 'top 0.05s linear, filter 0.3s ease-out',
+        transition: prefersReducedMotion ? 'none' : 'filter 0.3s ease-out',
       }}
       aria-label="Scroll-driven character that ages and walks as you progress through the timeline"
     >
@@ -88,10 +119,10 @@ export function PixelCompanion({ ageProgress, scrollProgress }: PixelCompanionPr
           src={displayFrame}
           alt={
             isWalking
-              ? `Character walking (age progress ${(ageProgress * 100).toFixed(0)}%)`
+              ? `Character walking to catch up (age progress ${(ageProgress * 100).toFixed(0)}%)`
               : `Character at age progress ${(ageProgress * 100).toFixed(0)}%`
           }
-          className="h-auto w-16 object-contain"
+          className="h-auto w-24 object-contain"
           style={{
             imageRendering: 'pixelated',
             filter: ageFilter,
