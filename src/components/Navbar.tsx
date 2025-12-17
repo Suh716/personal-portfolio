@@ -61,7 +61,7 @@ export function Navbar() {
             </a>
           </nav>
           <div className="flex items-center gap-2">
-            <a className="inline-flex" href="/resume.pdf" download aria-label="Download resume PDF">
+            <a className="inline-flex" href={`${import.meta.env.BASE_URL}resume.pdf`} download aria-label="Download resume PDF">
               <Button variant="ghost" type="button">
                 Resume
               </Button>
