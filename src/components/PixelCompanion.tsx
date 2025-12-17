@@ -9,6 +9,7 @@ import walk03 from '../assets/pixel/walk_03.png'
 
 const WALK_FRAMES = [walk00, walk01, walk02, walk03]
 const NUM_WALK_FRAMES = WALK_FRAMES.length
+const NUM_SLOTS = 5 // Discrete save slots between top and bottom
 
 interface PixelCompanionProps {
   ageProgress: number // 0.0 = youngest (oldest events), 1.0 = oldest (most recent)
@@ -57,8 +58,10 @@ export function PixelCompanion({ ageProgress, scrollProgress }: PixelCompanionPr
     // Set new timeout - scrolling stops after 200ms of no scroll events
     scrollTimeoutRef.current = window.setTimeout(() => {
       setIsScrolling(false)
-      // Update target position when scrolling stops - this is where character should walk to
-      setTargetPosition(scrollProgress)
+      // Update target position when scrolling stops - quantized into discrete \"save slots\"
+      const slotIndex = Math.round(scrollProgress * (NUM_SLOTS - 1))
+      const slotNormalized = slotIndex / (NUM_SLOTS - 1)
+      setTargetPosition(slotNormalized)
     }, 200)
 
     return () => {
