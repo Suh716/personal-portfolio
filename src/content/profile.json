@@ -1,0 +1,15 @@
+{
+  "name": "Sadeed Rashid",
+  "headline": "Computer Science Student • Full-Stack Developer",
+  "location": "New York, NY",
+  "openToRelocation": true,
+  "email": "srashid0324@gmail.com",
+  "phone": "(716) 817-4585",
+  "links": {
+    "github": "https://github.com/Suh716",
+    "linkedin": "https://www.linkedin.com/"
+  },
+  "summary": "I build modern full-stack applications and enjoy shipping clean, reliable user experiences. I’ve worked across React, .NET, Node, and Azure, and I’m graduating Dec 2025."
+}
+
+

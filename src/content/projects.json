@@ -1,0 +1,38 @@
+{
+  "projects": [
+    {
+      "title": "MizuSkin – AI-Powered Social Skincare App",
+      "slug": "mizuskin",
+      "date": "2025-08",
+      "description": "iOS skincare app using SwiftUI and cloud functions to provide AI-powered recommendations, personalized routines, and social sharing features.",
+      "highlights": [
+        "Built SwiftUI iOS app with an AI-backed recommendation flow.",
+        "Designed a cloud-integrated architecture with Azure Functions and storage services.",
+        "Implemented secure authentication and CI/CD pipelines."
+      ],
+      "tech": ["SwiftUI", "Azure Functions", "OpenAI API", "TypeScript", "Node.js", "Azure Table Storage", "Azure Blob Storage"],
+      "links": {
+        "demo": null,
+        "source": null
+      }
+    },
+    {
+      "title": "PhreekyNoises – Social Music Tracking App",
+      "slug": "phreekynoises",
+      "date": "2024-12",
+      "description": "Full-stack web app that tracks music habits via Spotify API, including authentication, music history, and friend connections.",
+      "highlights": [
+        "Integrated Spotify API for music history and profile data.",
+        "Implemented auth, database-backed history, and friend connections.",
+        "Managed development using an Agile Scrum board."
+      ],
+      "tech": ["React", "Node.js", "MySQL", "HTML", "CSS"],
+      "links": {
+        "demo": null,
+        "source": null
+      }
+    }
+  ]
+}
+
+

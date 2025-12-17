@@ -1,0 +1,45 @@
+{
+  "roles": [
+    {
+      "company": "CohnReznick",
+      "title": "Full-Stack Developer Intern",
+      "location": "New York, NY",
+      "start": "2025-06",
+      "end": "2025-08",
+      "bullets": [
+        "Built the IT Skills Repository, a full-stack enterprise web app for managing employee skill profiles; deployed across Dev/QA/Prod using Azure DevOps pipelines with automated builds, task tracking, and rollback procedures.",
+        "Developed a responsive front end with React.js and Bootstrap featuring profile creation, advanced filtering, skill analytics dashboard, and admin features secured with OAuth 2.0 and role-based permissions through Azure Active Directory.",
+        "Engineered backend services using C# + .NET Web API with REST endpoints for skill operations, self-assessments, and approvals; protected sensitive endpoints using JWT and managed data with SQL Server."
+      ],
+      "tech": ["React", "Bootstrap", ".NET Web API", "C#", "SQL Server", "Azure DevOps", "OAuth 2.0", "JWT", "Azure AD"]
+    },
+    {
+      "company": "Outlier (Scale AI)",
+      "title": "AI Trainer & University Ambassador",
+      "location": "Remote",
+      "start": "2024-05",
+      "end": "2025-06",
+      "bullets": [
+        "Completed 200+ AI-focused development tasks evaluating AI code written in Python, Java, JavaScript/TypeScript, C++, and SQL to improve model accuracy and prevent hallucinations.",
+        "Represented as a University Ambassador, referring 50+ student hires and hosting monthly workshops during the academic year; guided new contributors and promoted AI literacy across campus.",
+        "Led internal coding task reviews and collaborated with engineers to debug edge cases, enhance algorithm reliability, and mentor junior reviewers to improve QA across projects."
+      ],
+      "tech": ["Python", "Java", "TypeScript", "C++", "SQL"]
+    },
+    {
+      "company": "TheCoderSchool",
+      "title": "Coding Instructor",
+      "location": "Buffalo, NY",
+      "start": "2024-07",
+      "end": "2025-04",
+      "bullets": [
+        "Taught 20+ students foundational and advanced programming concepts in Python, C++, Java, JavaScript, HTML, and CSS, adapting lessons to different skill levels.",
+        "Created and led 30+ hands-on projects reinforcing problem-solving skills (game development, web apps, data structures), maintaining student engagement and retention.",
+        "Mentored students one-on-one and in groups, focusing on logical thinking, debugging strategies, and end-to-end project development."
+      ],
+      "tech": ["Python", "C++", "Java", "JavaScript", "HTML", "CSS"]
+    }
+  ]
+}
+
+
