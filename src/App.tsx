@@ -68,36 +68,6 @@ function App() {
           </Container>
         </section>
 
-        <section id="projects" className="py-16">
-          <Container>
-            <h2 className="text-2xl font-semibold tracking-tight">Projects</h2>
-            <p className="mt-2 text-ink-900/70">Selected projects from my resume.</p>
-            <div className="mt-6 space-y-4">
-              {projects.projects.map((p) => (
-                <article key={p.slug} className="rounded-2xl border border-ink-900/10 bg-paper-100 p-5 shadow-soft">
-                  <div className="flex flex-wrap items-center justify-between gap-2">
-                    <h3 className="text-sm font-semibold">{p.title}</h3>
-                    <span className="text-xs text-ink-900/60">{p.date}</span>
-                  </div>
-                  <p className="mt-2 text-sm text-ink-900/70">{p.description}</p>
-                  {p.tech?.length ? (
-                    <div className="mt-3 flex flex-wrap gap-2">
-                      {p.tech.slice(0, 8).map((t) => (
-                        <span
-                          key={t}
-                          className="rounded-full border border-ink-900/10 bg-paper-50 px-2.5 py-1 text-xs text-ink-900/70"
-                        >
-                          {t}
-                        </span>
-                      ))}
-                    </div>
-                  ) : null}
-                </article>
-              ))}
-            </div>
-          </Container>
-        </section>
-
         <section id="experience" className="py-16">
           <Container>
             <h2 className="text-2xl font-semibold tracking-tight">Experience</h2>
@@ -124,6 +94,36 @@ function App() {
                       <li key={b}>{b}</li>
                     ))}
                   </ul>
+                </article>
+              ))}
+            </div>
+          </Container>
+        </section>
+
+        <section id="projects" className="py-16">
+          <Container>
+            <h2 className="text-2xl font-semibold tracking-tight">Projects</h2>
+            <p className="mt-2 text-ink-900/70">Selected projects from my resume.</p>
+            <div className="mt-6 space-y-4">
+              {projects.projects.map((p) => (
+                <article key={p.slug} className="rounded-2xl border border-ink-900/10 bg-paper-100 p-5 shadow-soft">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <h3 className="text-sm font-semibold">{p.title}</h3>
+                    <span className="text-xs text-ink-900/60">{p.date}</span>
+                  </div>
+                  <p className="mt-2 text-sm text-ink-900/70">{p.description}</p>
+                  {p.tech?.length ? (
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {p.tech.slice(0, 8).map((t) => (
+                        <span
+                          key={t}
+                          className="rounded-full border border-ink-900/10 bg-paper-50 px-2.5 py-1 text-xs text-ink-900/70"
+                        >
+                          {t}
+                        </span>
+                      ))}
+                    </div>
+                  ) : null}
                 </article>
               ))}
             </div>
