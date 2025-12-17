@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+
+  html,
+  body {
+    height: 100%;
+  }
+
+  body {
+    @apply bg-paper-50 text-ink-900 antialiased;
+  }
+
+  a {
+    @apply text-ink-900 underline decoration-ink-900/20 underline-offset-4 transition-colors hover:decoration-ink-900/40;
+  }
+
+  ::selection {
+    @apply bg-accent-cyan/20;
+  }
+}
