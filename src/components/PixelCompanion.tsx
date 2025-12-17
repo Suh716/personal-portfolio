@@ -76,33 +76,31 @@ export function PixelCompanion({ ageProgress, scrollProgress }: PixelCompanionPr
     displayFrame = currentAgeFrame
   }
 
-  // Horizontal position: start at left, move toward center as you scroll
-  const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1024)
+  const [viewportHeight, setViewportHeight] = useState(typeof window !== 'undefined' ? window.innerHeight : 800)
 
   useEffect(() => {
     const handleResize = () => {
-      setWindowWidth(window.innerWidth)
+      setViewportHeight(window.innerHeight)
     }
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
-  // scrollProgress 0.0 = left edge, 1.0 = center
-  const maxLeftOffset = 24 // pixels from left edge at start
-  const maxCenterOffset = windowWidth > 1024 ? 200 : 100 // pixels from left when at center
-  const horizontalPosition = maxLeftOffset + (maxCenterOffset - maxLeftOffset) * scrollProgress
+  // Fixed left position - character walks straight down, no horizontal movement
+  const fixedLeftPosition = 24 // pixels from left edge
 
-  // Vertical position: follow scroll, but stay visible
+  // Vertical position: follows scroll position (character moves down as you scroll)
   const navbarHeight = 64
-  const topOffset = navbarHeight + 20 // Start just below navbar
+  const maxScrollDistance = viewportHeight - navbarHeight - 150 // Leave some space at bottom
+  const topOffset = navbarHeight + 20 + scrollProgress * maxScrollDistance
 
   return (
     <aside
       className="pointer-events-none fixed z-30 hidden lg:block"
       style={{
-        left: `${horizontalPosition}px`,
+        left: `${fixedLeftPosition}px`,
         top: `${topOffset}px`,
-        transition: prefersReducedMotion ? 'none' : 'left 0.3s ease-out',
+        transition: prefersReducedMotion ? 'none' : 'top 0.05s linear',
       }}
       aria-label="Scroll-driven character that ages and walks as you progress through the timeline"
     >
@@ -116,10 +114,10 @@ export function PixelCompanion({ ageProgress, scrollProgress }: PixelCompanionPr
                 ? `Character walking (age progress ${(clampedAgeProgress * 100).toFixed(0)}%)`
                 : `Character at age progress ${(clampedAgeProgress * 100).toFixed(0)}%`
           }
-          className="h-32 w-20 object-contain drop-shadow-lg"
+          className="h-24 w-16 object-contain"
           style={{
             imageRendering: 'pixelated',
-            filter: 'drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1))',
+            filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1))',
           }}
         />
       </div>

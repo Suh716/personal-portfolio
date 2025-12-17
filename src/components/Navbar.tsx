@@ -12,7 +12,14 @@ export function Navbar() {
     <header className="sticky top-0 z-40 border-b border-ink-900/10 bg-paper-50/85 backdrop-blur">
       <Container>
         <div className="flex h-16 items-center justify-between">
-          <a href="/" className="font-semibold no-underline">
+          <a
+            href="#"
+            className="font-semibold no-underline"
+            onClick={(e) => {
+              e.preventDefault()
+              window.scrollTo({ top: 0, behavior: 'smooth' })
+            }}
+          >
             <span className="inline-flex items-center gap-2">
               <span className="inline-block h-2.5 w-2.5 rounded-full bg-accent-violet" />
               <span>{profile.name}</span>
