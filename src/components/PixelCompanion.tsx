@@ -79,11 +79,11 @@ export function PixelCompanion({ ageProgress, scrollProgress }: PixelCompanionPr
       return
     }
 
-    const catchUpSpeed = 0.03 // Much slower catch-up speed (was 0.15)
+    const catchUpSpeed = 0.05 // Catch-up speed
     const interval = setInterval(() => {
       setCurrentPosition((prev) => {
         const diff = targetPosition - prev
-        // If difference is very small, snap to target, otherwise ease towards it slowly
+        // If difference is very small, snap to target, otherwise ease towards it
         if (Math.abs(diff) < 0.001) {
           return targetPosition
         }
@@ -104,7 +104,7 @@ export function PixelCompanion({ ageProgress, scrollProgress }: PixelCompanionPr
     if (isMoving && scrollProgress > 0.02) {
       const interval = setInterval(() => {
         setWalkFrame((prev) => (prev + 1) % NUM_WALK_FRAMES)
-      }, 400) // Much slower walk animation (was 200ms, now 400ms)
+      }, 200) // Walk animation speed (200ms per frame)
 
       return () => clearInterval(interval)
     } else {
