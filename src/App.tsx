@@ -28,7 +28,7 @@ function App() {
                   <Button onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })}>
                     View projects
                   </Button>
-                  <a className="inline-flex" href="/resume.pdf" download aria-label="Download resume PDF">
+                  <a className="inline-flex" href={`${import.meta.env.BASE_URL}resume.pdf`} download aria-label="Download resume PDF">
                     <Button variant="ghost" type="button">
                       Download resume
                     </Button>
