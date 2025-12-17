@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-// Import all age frames
+// Import all frames
 import age00 from '../assets/pixel/age_00.png'
 import age01 from '../assets/pixel/age_01.png'
 import age02 from '../assets/pixel/age_02.png'
@@ -9,22 +9,25 @@ import age04 from '../assets/pixel/age_04.png'
 import age05 from '../assets/pixel/age_05.png'
 import age06 from '../assets/pixel/age_06.png'
 import age07 from '../assets/pixel/age_07.png'
+import walk00 from '../assets/pixel/walk_00.png'
+import walk01 from '../assets/pixel/walk_01.png'
+import walk02 from '../assets/pixel/walk_02.png'
+import walk03 from '../assets/pixel/walk_03.png'
+import sitting from '../assets/pixel/sitting.png'
 
 const AGE_FRAMES = [age00, age01, age02, age03, age04, age05, age06, age07]
-const NUM_FRAMES = AGE_FRAMES.length
+const WALK_FRAMES = [walk00, walk01, walk02, walk03]
+const NUM_AGE_FRAMES = AGE_FRAMES.length
+const NUM_WALK_FRAMES = WALK_FRAMES.length
 
 interface PixelCompanionProps {
   ageProgress: number // 0.0 = youngest (oldest events), 1.0 = oldest (most recent)
+  scrollProgress: number // 0.0 = top, 1.0 = bottom
 }
 
-export function PixelCompanion({ ageProgress }: PixelCompanionProps) {
-  // Clamp ageProgress to [0, 1] and convert to frame index
-  const clampedProgress = Math.max(0, Math.min(1, ageProgress))
-  const frameIndex = Math.round(clampedProgress * (NUM_FRAMES - 1))
-  const currentFrame = AGE_FRAMES[frameIndex]
-
-  // Check for reduced motion preference
+export function PixelCompanion({ ageProgress, scrollProgress }: PixelCompanionProps) {
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
+  const [walkFrame, setWalkFrame] = useState(0)
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
@@ -38,23 +41,88 @@ export function PixelCompanion({ ageProgress }: PixelCompanionProps) {
     return () => mediaQuery.removeEventListener('change', handleChange)
   }, [])
 
-  // If reduced motion, show a single middle frame
-  const displayFrame = prefersReducedMotion ? AGE_FRAMES[Math.floor(NUM_FRAMES / 2)] : currentFrame
+  // Animate walking cycle when scrolling
+  useEffect(() => {
+    if (prefersReducedMotion) return
+
+    // Only animate walking when not at the very top (sitting)
+    if (scrollProgress > 0.05) {
+      const interval = setInterval(() => {
+        setWalkFrame((prev) => (prev + 1) % NUM_WALK_FRAMES)
+      }, 200) // Walk animation speed
+
+      return () => clearInterval(interval)
+    } else {
+      setWalkFrame(0)
+    }
+  }, [scrollProgress, prefersReducedMotion])
+
+  // Clamp ageProgress to [0, 1] and convert to frame index
+  const clampedAgeProgress = Math.max(0, Math.min(1, ageProgress))
+  const ageFrameIndex = Math.round(clampedAgeProgress * (NUM_AGE_FRAMES - 1))
+  const currentAgeFrame = AGE_FRAMES[ageFrameIndex]
+
+  // Determine pose: sitting at top, walking when scrolling
+  const isSitting = scrollProgress < 0.05
+  const isWalking = scrollProgress >= 0.05 && !prefersReducedMotion
+
+  // Select frame based on state
+  let displayFrame: string
+  if (isSitting) {
+    displayFrame = sitting
+  } else if (isWalking) {
+    displayFrame = WALK_FRAMES[walkFrame]
+  } else {
+    displayFrame = currentAgeFrame
+  }
+
+  // Horizontal position: start at left, move toward center as you scroll
+  const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1024)
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth)
+    }
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
+  // scrollProgress 0.0 = left edge, 1.0 = center
+  const maxLeftOffset = 24 // pixels from left edge at start
+  const maxCenterOffset = windowWidth > 1024 ? 200 : 100 // pixels from left when at center
+  const horizontalPosition = maxLeftOffset + (maxCenterOffset - maxLeftOffset) * scrollProgress
+
+  // Vertical position: follow scroll, but stay visible
+  const navbarHeight = 64
+  const topOffset = navbarHeight + 20 // Start just below navbar
 
   return (
     <aside
-      className="pointer-events-none fixed right-4 top-1/2 z-30 -translate-y-1/2 hidden lg:block"
-      aria-label="Scroll-driven character that ages as you progress through the timeline"
+      className="pointer-events-none fixed z-30 hidden lg:block"
+      style={{
+        left: `${horizontalPosition}px`,
+        top: `${topOffset}px`,
+        transition: prefersReducedMotion ? 'none' : 'left 0.3s ease-out',
+      }}
+      aria-label="Scroll-driven character that ages and walks as you progress through the timeline"
     >
       <div className="relative">
         <img
           src={displayFrame}
-          alt={`Character at age progress ${(clampedProgress * 100).toFixed(0)}%`}
-          className="h-24 w-16 object-contain drop-shadow-lg transition-opacity duration-300"
-          style={{ imageRendering: 'pixelated' }}
+          alt={
+            isSitting
+              ? 'Character sitting at the start'
+              : isWalking
+                ? `Character walking (age progress ${(clampedAgeProgress * 100).toFixed(0)}%)`
+                : `Character at age progress ${(clampedAgeProgress * 100).toFixed(0)}%`
+          }
+          className="h-32 w-20 object-contain drop-shadow-lg"
+          style={{
+            imageRendering: 'pixelated',
+            filter: 'drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1))',
+          }}
         />
       </div>
     </aside>
   )
 }
-
