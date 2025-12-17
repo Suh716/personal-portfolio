@@ -1,0 +1,35 @@
+{
+  "education": [
+    {
+      "school": "University at Buffalo, The State University of New York",
+      "degree": "Bachelor of Science in Computer Science",
+      "location": "Buffalo, NY",
+      "end": "2025-12",
+      "notes": [
+        "Relevant Coursework: System Programming, Data Structures, Web Development, Algorithms and Complexity, Software Engineering Concepts, Computer Security, Machine Learning, Data Intensive Computing, Microprocessors, Embedded Systems"
+      ]
+    }
+  ],
+  "leadership": [
+    {
+      "title": "Brotherhood Head",
+      "org": "Theta Tau Professional Engineering Fraternity",
+      "location": "Buffalo, NY",
+      "start": "2023-01",
+      "end": "2025-08",
+      "bullets": [
+        "Led fraternity-wide initiatives to strengthen camaraderie, organize professional development events, and expand networking opportunities by collaborating with alumni and industry professionals.",
+        "Coordinated with committee heads and external organizations to plan large-scale events, ensuring alignment with fraternity goals and fostering cross-organizational partnerships."
+      ]
+    }
+  ],
+  "skills": {
+    "languagesAndWeb": ["Python", "Java", "JavaScript", "TypeScript", "C", "C#", "C++", "SQL", "HTML", "CSS", "Scala"],
+    "frameworksAndTools": ["Angular", "React", "Node.js", ".NET Web API", "Spring", "Git", "JWT", "OAuth 2.0", "REST APIs"],
+    "mlAndData": ["TensorFlow", "Keras", "scikit-learn", "OpenCV", "MS SQL Server", "MySQL", "Spark", "Hadoop"],
+    "cloudAndDevOps": ["Azure (AAD, CI/CD, DevOps)", "GitHub", "JIRA", "Agile Scrum"],
+    "embeddedAndSystems": ["Microprocessors", "Embedded Linux", "RTOS"]
+  }
+}
+
+

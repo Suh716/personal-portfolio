@@ -2,6 +2,11 @@ import { Container } from './Container'
 import { Button } from './Button'
 
 export function Navbar() {
+  const scrollTo = (id: string) => {
+    const el = document.getElementById(id)
+    el?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+
   return (
     <header className="sticky top-0 z-40 border-b border-ink-900/10 bg-paper-50/85 backdrop-blur">
       <Container>
@@ -13,23 +18,53 @@ export function Navbar() {
             </span>
           </a>
           <nav className="hidden items-center gap-2 sm:flex">
-            <a className="rounded-lg px-3 py-2 text-sm no-underline hover:bg-paper-200" href="#projects">
+            <a
+              className="rounded-lg px-3 py-2 text-sm no-underline hover:bg-paper-200"
+              href="#projects"
+              onClick={(e) => {
+                e.preventDefault()
+                scrollTo('projects')
+              }}
+            >
               Projects
             </a>
-            <a className="rounded-lg px-3 py-2 text-sm no-underline hover:bg-paper-200" href="#experience">
+            <a
+              className="rounded-lg px-3 py-2 text-sm no-underline hover:bg-paper-200"
+              href="#experience"
+              onClick={(e) => {
+                e.preventDefault()
+                scrollTo('experience')
+              }}
+            >
               Experience
             </a>
-            <a className="rounded-lg px-3 py-2 text-sm no-underline hover:bg-paper-200" href="#qualifications">
+            <a
+              className="rounded-lg px-3 py-2 text-sm no-underline hover:bg-paper-200"
+              href="#qualifications"
+              onClick={(e) => {
+                e.preventDefault()
+                scrollTo('qualifications')
+              }}
+            >
               Qualifications
             </a>
-            <a className="rounded-lg px-3 py-2 text-sm no-underline hover:bg-paper-200" href="#contact">
+            <a
+              className="rounded-lg px-3 py-2 text-sm no-underline hover:bg-paper-200"
+              href="#contact"
+              onClick={(e) => {
+                e.preventDefault()
+                scrollTo('contact')
+              }}
+            >
               Contact
             </a>
           </nav>
           <div className="flex items-center gap-2">
-            <Button variant="ghost" onClick={() => window.open('/resume.pdf', '_blank')}>
-              Resume
-            </Button>
+            <a className="inline-flex" href="/resume.pdf" download aria-label="Download resume PDF">
+              <Button variant="ghost" type="button">
+                Resume
+              </Button>
+            </a>
           </div>
         </div>
       </Container>
