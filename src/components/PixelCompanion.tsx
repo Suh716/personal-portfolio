@@ -9,7 +9,6 @@ import walk03 from '../assets/pixel/walk_03.png'
 
 const WALK_FRAMES = [walk00, walk01, walk02, walk03]
 const NUM_WALK_FRAMES = WALK_FRAMES.length
-const NUM_SLOTS = 5 // Discrete save slots between top and bottom
 
 interface PixelCompanionProps {
   ageProgress: number // 0.0 = youngest (oldest events), 1.0 = oldest (most recent)
@@ -19,9 +18,9 @@ interface PixelCompanionProps {
 export function PixelCompanion({ ageProgress, scrollProgress }: PixelCompanionProps) {
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
   const [walkFrame, setWalkFrame] = useState(0)
-  const [viewportHeight, setViewportHeight] = useState(typeof window !== 'undefined' ? window.innerHeight : 800)
-  const [targetPosition, setTargetPosition] = useState(0) // Target scroll position (where character should be)
-  const [currentPosition, setCurrentPosition] = useState(0) // Current character position (independent entity)
+  const [targetPosition, setTargetPosition] = useState(0) // Target top offset in px (where character should be)
+  const [currentPosition, setCurrentPosition] = useState(0) // Current character top offset in px (independent entity)
+  const [zoneOffsets, setZoneOffsets] = useState<number[]>([]) // Anchors for [hero, experience, projects, qualifications, contact]
   const [isScrolling, setIsScrolling] = useState(false)
   const scrollTimeoutRef = useRef<number | null>(null)
   const animationFrameRef = useRef<number | null>(null)
@@ -38,16 +37,55 @@ export function PixelCompanion({ ageProgress, scrollProgress }: PixelCompanionPr
     return () => mediaQuery.removeEventListener('change', handleChange)
   }, [])
 
+  // Compute zone anchors based on section headers: hero, experience, projects, qualifications, contact
   useEffect(() => {
-    const handleResize = () => {
-      setViewportHeight(window.innerHeight)
+    const computeZones = () => {
+      const root = document.getElementById('root')
+      const rootTop = root ? root.getBoundingClientRect().top + window.scrollY : 0
+
+      const zones: number[] = []
+
+      const main = document.querySelector('main')
+      const heroSection = main?.querySelector('section') as HTMLElement | null
+
+      const addZone = (el: HTMLElement | null) => {
+        if (!el) return
+        const rect = el.getBoundingClientRect()
+        const y = rect.top + window.scrollY - rootTop
+        zones.push(y)
+      }
+
+      // Hero / header zone
+      if (heroSection) {
+        addZone(heroSection)
+      } else {
+        zones.push(0)
+      }
+
+      addZone(document.getElementById('experience') as HTMLElement | null)
+      addZone(document.getElementById('projects') as HTMLElement | null)
+      addZone(document.getElementById('qualifications') as HTMLElement | null)
+      addZone(document.getElementById('contact') as HTMLElement | null)
+
+      if (zones.length) {
+        setZoneOffsets(zones)
+        // Initialize character at the first zone on first load
+        if (currentPosition === 0 && targetPosition === 0) {
+          setCurrentPosition(zones[0])
+          setTargetPosition(zones[0])
+        }
+      }
     }
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
-  }, [])
+
+    computeZones()
+    window.addEventListener('resize', computeZones)
+    return () => window.removeEventListener('resize', computeZones)
+  }, [currentPosition, targetPosition])
 
   // Detect when scrolling stops - character stays fixed during scroll
   useEffect(() => {
+    if (!zoneOffsets.length) return
+
     setIsScrolling(true)
 
     // Clear existing timeout
@@ -58,10 +96,24 @@ export function PixelCompanion({ ageProgress, scrollProgress }: PixelCompanionPr
     // Set new timeout - scrolling stops after 200ms of no scroll events
     scrollTimeoutRef.current = window.setTimeout(() => {
       setIsScrolling(false)
-      // Update target position when scrolling stops - quantized into discrete \"save slots\"
-      const slotIndex = Math.round(scrollProgress * (NUM_SLOTS - 1))
-      const slotNormalized = slotIndex / (NUM_SLOTS - 1)
-      setTargetPosition(slotNormalized)
+      // Determine which zone header is closest to the viewport center
+      const root = document.getElementById('root')
+      const rootTop = root ? root.getBoundingClientRect().top + window.scrollY : 0
+      const viewportCenter = window.scrollY + window.innerHeight / 2
+      const relativeCenter = viewportCenter - rootTop
+
+      let closestIndex = 0
+      let closestDistance = Infinity
+      zoneOffsets.forEach((offset, index) => {
+        const distance = Math.abs(offset - relativeCenter)
+        if (distance < closestDistance) {
+          closestDistance = distance
+          closestIndex = index
+        }
+      })
+
+      const targetTop = zoneOffsets[closestIndex]
+      setTargetPosition(targetTop)
     }, 200)
 
     return () => {
@@ -69,7 +121,7 @@ export function PixelCompanion({ ageProgress, scrollProgress }: PixelCompanionPr
         window.clearTimeout(scrollTimeoutRef.current)
       }
     }
-  }, [scrollProgress])
+  }, [scrollProgress, zoneOffsets])
 
   // Character moves at its own fixed walking pace to catch up (only when not scrolling)
   useEffect(() => {
@@ -84,8 +136,8 @@ export function PixelCompanion({ ageProgress, scrollProgress }: PixelCompanionPr
     }
 
     // Character walks at a fixed speed (pixels per frame) to catch up
-    const walkSpeed = 0.008 // Fixed walking speed per frame (slower, more deliberate)
-    const minDistance = 0.002 // Minimum distance to consider "caught up"
+    const walkSpeed = 8 // px per frame
+    const minDistance = 2 // px: minimum distance to consider "caught up"
 
     const animate = () => {
       setCurrentPosition((prev) => {
@@ -101,10 +153,9 @@ export function PixelCompanion({ ageProgress, scrollProgress }: PixelCompanionPr
         if (diff > 0) {
           // Moving down (forward)
           return Math.min(prev + walkSpeed, targetPosition)
-        } else {
-          // Moving up (backward)
-          return Math.max(prev - walkSpeed, targetPosition)
         }
+        // Moving up (backward)
+        return Math.max(prev - walkSpeed, targetPosition)
       })
 
       animationFrameRef.current = requestAnimationFrame(animate)
@@ -144,9 +195,7 @@ export function PixelCompanion({ ageProgress, scrollProgress }: PixelCompanionPr
   const fixedLeftPosition = 24 // pixels from left edge
 
   // Vertical position: character's independent position (not tied directly to scroll)
-  const navbarHeight = 64
-  const maxScrollDistance = viewportHeight - navbarHeight - 150 // Leave some space at bottom
-  const topOffset = navbarHeight + 20 + currentPosition * maxScrollDistance
+  const topOffset = currentPosition
 
   // Apply subtle aging effect via CSS filter (brightness/contrast changes)
   const ageFilter = prefersReducedMotion
