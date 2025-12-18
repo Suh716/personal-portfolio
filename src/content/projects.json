@@ -4,11 +4,10 @@
       "title": "MizuSkin – AI-Powered Social Skincare App",
       "slug": "mizuskin",
       "date": "2025-08",
-      "description": "iOS skincare app using SwiftUI and cloud functions to provide AI-powered recommendations, personalized routines, and social sharing features.",
+      "description": "Developed an iOS skincare app using SwiftUI, Azure Functions, and OpenAI API to provide AI-powered skincare recommendations, personalized routines, and social sharing features.",
       "highlights": [
-        "Built SwiftUI iOS app with an AI-backed recommendation flow.",
-        "Designed a cloud-integrated architecture with Azure Functions and storage services.",
-        "Implemented secure authentication and CI/CD pipelines."
+        "Developed an iOS skincare app using SwiftUI, Azure Functions, and OpenAI API to provide AI-powered skincare recommendations, personalized routines, and social sharing features that boosted user engagement and retention.",
+        "Designed a cloud-integrated architecture with a TypeScript (Node.js) backend, Azure Table Storage, and Azure Blob Storage, plus CI/CD pipelines, achieving scalable data handling and secure authentication."
       ],
       "tech": ["SwiftUI", "Azure Functions", "OpenAI API", "TypeScript", "Node.js", "Azure Table Storage", "Azure Blob Storage"],
       "links": {
@@ -20,13 +19,77 @@
       "title": "PhreekyNoises – Social Music Tracking App",
       "slug": "phreekynoises",
       "date": "2024-12",
-      "description": "Full-stack web app that tracks music habits via Spotify API, including authentication, music history, and friend connections.",
+      "description": "Full-stack music tracking web app that connects to Spotify for authentication and music history.",
       "highlights": [
-        "Integrated Spotify API for music history and profile data.",
-        "Implemented auth, database-backed history, and friend connections.",
-        "Managed development using an Agile Scrum board."
+        "Implemented a full-stack web application using React, Node.js, HTML, CSS, and MySQL enabling users to track their music habits and connect to the Spotify API for authentication, music history, and friend connections.",
+        "Managed development tasks and feature implementations using an Agile Scrum board, ensuring efficient collaboration, sprint planning, and iterative improvements."
       ],
       "tech": ["React", "Node.js", "MySQL", "HTML", "CSS"],
+      "links": {
+        "demo": null,
+        "source": null
+      }
+    },
+    {
+      "title": "ASL AI System",
+      "slug": "asl-ai-system",
+      "date": "2024-10",
+      "description": "ASL recognition system combining deep learning and a React frontend for real-time interpretation.",
+      "highlights": [
+        "Developed an ASL recognition system using PyTorch and TensorFlow/Keras with a layered CNN-LSTM model trained on augmented and processed data from the Microsoft ASL dataset, leveraging OpenCV for real-time video processing.",
+        "Designed a responsive and accessible React.js frontend for real-time ASL interpretation, integrating Google's Text-to-Speech API to convert recognized gestures into spoken output."
+      ],
+      "tech": [
+        "PyTorch",
+        "TensorFlow",
+        "Keras",
+        "CNN-LSTM",
+        "OpenCV",
+        "React",
+        "Google Text-to-Speech"
+      ],
+      "links": {
+        "demo": null,
+        "source": null
+      }
+    },
+    {
+      "title": "Airplane Crash Exploratory Data Analysis",
+      "slug": "airplane-crash-eda",
+      "date": "2025-03",
+      "description": "Exploratory data analysis and modeling of airplane crash data using Python and big data tools.",
+      "highlights": [
+        "Performed large-scale analysis of airplane crash data using Python (Pandas, NumPy, scikit-learn) with Apache Spark for data transformations and Hadoop for storage/retrieval, building Random Forest models to assess crash severity.",
+        "Used k-NN, K-Means clustering, and Naive Bayes for classification, leveraging Spark for parallel computation to speed model training, and designed Tableau dashboards to show crash trends, severity distributions, and safety improvements."
+      ],
+      "tech": [
+        "Python",
+        "Pandas",
+        "NumPy",
+        "scikit-learn",
+        "Apache Spark",
+        "Hadoop",
+        "Random Forest",
+        "k-NN",
+        "K-Means",
+        "Naive Bayes",
+        "Tableau"
+      ],
+      "links": {
+        "demo": null,
+        "source": null
+      }
+    },
+    {
+      "title": "Theta Tau Mu Gamma – Automated Greenhouse",
+      "slug": "theta-tau-automated-greenhouse",
+      "date": "2023-09",
+      "description": "Automated greenhouse system built with embedded C++ firmware and custom sensor/control circuits.",
+      "highlights": [
+        "Developed object-oriented embedded C++ firmware on an Arduino Mega to manage sensor data acquisition, relay-controlled motors, and system state across digital and analog I/O interfaces.",
+        "Designed and implemented integrated digital and analog circuits connecting moisture and light sensors, DC water pumps, relays, LED lighting, and a touchscreen display to enable autonomous environmental monitoring and control."
+      ],
+      "tech": ["C++", "Arduino Mega", "Embedded Systems", "Sensors", "Relays", "DC Pumps", "LED Lighting", "Touchscreen"],
       "links": {
         "demo": null,
         "source": null
