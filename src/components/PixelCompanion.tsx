@@ -114,7 +114,7 @@ export function PixelCompanion({ ageProgress, scrollProgress }: PixelCompanionPr
 
       const targetTop = zoneOffsets[closestIndex]
       setTargetPosition(targetTop)
-    }, 80)
+    }, 60)
 
     return () => {
       if (scrollTimeoutRef.current !== null) {
@@ -135,9 +135,10 @@ export function PixelCompanion({ ageProgress, scrollProgress }: PixelCompanionPr
       return
     }
 
-    // Character walks at a fixed speed (pixels per frame) to catch up
-    const walkSpeed = 18 // px per frame (faster so it catches up quickly)
-    const minDistance = 4 // px: minimum distance to consider "caught up"
+    // Character walks toward target with smooth easing (handles large jumps across sections)
+    const maxStep = 22 // max px per frame
+    const minStep = 2 // min px per frame when moving
+    const minDistance = 1.5 // px: minimum distance to consider \"caught up\"
 
     const animate = () => {
       setCurrentPosition((prev) => {
@@ -149,13 +150,15 @@ export function PixelCompanion({ ageProgress, scrollProgress }: PixelCompanionPr
           return targetPosition
         }
 
-        // Move at fixed speed toward target
+        // Step size scales with distance but is clamped for smoothness
+        const dynamicStep = Math.min(maxStep, Math.max(minStep, distance * 0.25))
+
         if (diff > 0) {
           // Moving down (forward)
-          return Math.min(prev + walkSpeed, targetPosition)
+          return Math.min(prev + dynamicStep, targetPosition)
         }
         // Moving up (backward)
-        return Math.max(prev - walkSpeed, targetPosition)
+        return Math.max(prev - dynamicStep, targetPosition)
       })
 
       animationFrameRef.current = requestAnimationFrame(animate)
@@ -222,10 +225,10 @@ export function PixelCompanion({ ageProgress, scrollProgress }: PixelCompanionPr
           src={displayFrame}
           alt={
             isWalking
-              ? `Character walking to catch up (age progress ${(ageProgress * 100).toFixed(0)}%)`
+              ? `Character walking to the current section (age progress ${(ageProgress * 100).toFixed(0)}%)`
               : `Character at age progress ${(ageProgress * 100).toFixed(0)}%`
           }
-          className="h-auto w-24 object-contain"
+          className="h-auto w-28 object-contain"
           style={{
             imageRendering: 'pixelated',
             filter: ageFilter,
