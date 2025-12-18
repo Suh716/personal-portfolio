@@ -160,7 +160,7 @@ export function PixelCompanion({ ageProgress, scrollProgress }: PixelCompanionPr
 
   return (
     <aside
-      className="pointer-events-none fixed z-30 hidden lg:block"
+      className="pointer-events-none absolute z-30 hidden lg:block"
       style={{
         left: `${fixedLeftPosition}px`,
         top: `${topOffset}px`,

@@ -10,7 +10,7 @@ function App() {
   const { ageProgress, scrollProgress } = useScrollAge()
 
   return (
-    <div className="min-h-screen bg-paper-50">
+    <div className="relative min-h-screen bg-paper-50">
       <div className="pointer-events-none fixed inset-x-0 top-0 h-40 bg-gradient-to-b from-accent-violet/10 via-accent-cyan/5 to-transparent" />
 
       <Navbar />
