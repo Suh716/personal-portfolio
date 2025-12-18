@@ -13,7 +13,13 @@
   }
 
   body {
-    @apply bg-paper-50 text-ink-900 antialiased;
+    @apply text-ink-900 antialiased;
+    background-color: #020617; /* near-black */
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+    background-size: 40px 40px;
+    background-position: -1px -1px;
   }
 
   a {
@@ -22,5 +28,26 @@
 
   ::selection {
     @apply bg-accent-cyan/20;
+  }
+}
+
+@layer utilities {
+  .hover-card {
+    @apply transition-none;
+  }
+
+  @keyframes fade-in-up {
+    0% {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fade-in-up {
+    animation: fade-in-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
   }
 }

@@ -3,7 +3,7 @@ import { profile } from '../content/load'
 
 export function Footer() {
   return (
-    <footer className="border-t border-ink-900/10">
+    <footer className="border-t border-ink-900/10 bg-paper-50/95">
       <Container>
         <div className="flex flex-col gap-2 py-10 text-sm text-ink-900/70 sm:flex-row sm:items-center sm:justify-between">
           <span>© {new Date().getFullYear()} {profile.name}</span>
