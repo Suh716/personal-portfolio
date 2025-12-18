@@ -4,6 +4,7 @@ import { Navbar } from './components/Navbar'
 import { Button } from './components/Button'
 import { PixelCompanion } from './components/PixelCompanion'
 import { RevealOnScroll } from './components/RevealOnScroll'
+import backgroundVideo from './assets/backgroundvideo.mp4'
 import { useScrollAge } from './hooks/useScrollAge'
 import { experience, profile, projects, qualifications } from './content/load'
 
@@ -20,9 +21,17 @@ function App() {
   const parallaxOffset = -scrollY * 0.15
 
   return (
-    <div className="relative min-h-screen bg-paper-50">
+    <div className="relative min-h-screen">
+      <video
+        className="fixed inset-0 z-[-20] h-full w-full object-cover"
+        src={backgroundVideo}
+        autoPlay
+        muted
+        loop
+        playsInline
+      />
       <div
-        className="pointer-events-none fixed inset-x-0 top-0 h-40 bg-gradient-to-b from-accent-violet/15 via-accent-cyan/5 to-transparent"
+        className="pointer-events-none fixed inset-0 z-[-10] bg-gradient-to-b from-ink-900/80 via-ink-900/50 to-ink-900/90"
         style={{ transform: `translateY(${parallaxOffset}px)` }}
       />
 
@@ -33,11 +42,11 @@ function App() {
         <section className="py-16 sm:py-24">
           <Container>
             <div className="grid gap-10 lg:grid-cols-[1.2fr] lg:items-center">
-              <div>
-                <h1 className="mt-6 text-balance text-4xl font-semibold tracking-tight text-ink-900 sm:text-5xl">
+              <div className="hover-card rounded-3xl border border-ink-900/10 bg-paper-50/95 p-6 shadow-soft sm:p-10">
+                <h1 className="text-balance text-4xl font-semibold tracking-tight text-ink-900 sm:text-5xl">
                   Hi, I’m <span className="text-accent-violet">{profile.name}</span>.
                 </h1>
-                <p className="mt-4 max-w-2xl text-pretty text-lg text-ink-900/70">{profile.summary}</p>
+                <p className="mt-4 max-w-2xl text-pretty text-lg text-ink-900/80">{profile.summary}</p>
                 <div className="mt-8 flex flex-wrap gap-3">
                   <Button onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })}>
                     View projects
