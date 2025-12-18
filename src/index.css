@@ -24,3 +24,9 @@
     @apply bg-accent-cyan/20;
   }
 }
+
+@layer utilities {
+  .hover-card {
+    @apply transition-transform transition-shadow duration-200 hover:-translate-y-1 hover:shadow-soft;
+  }
+}

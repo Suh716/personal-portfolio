@@ -27,12 +27,8 @@ function App() {
       <main>
         <section className="py-16 sm:py-24">
           <Container>
-            <div className="grid gap-10 lg:grid-cols-[1.2fr_0.8fr] lg:items-center">
+            <div className="grid gap-10 lg:grid-cols-[1.2fr] lg:items-center">
               <div>
-                <div className="inline-flex items-center gap-2 rounded-full border border-ink-900/10 bg-paper-100 px-3 py-1 text-xs text-ink-900/70 shadow-soft">
-                  <span className="inline-block h-2 w-2 rounded-full bg-accent-cyan" />
-                  <span>Clean white theme • colorful accents • pixel companion coming next</span>
-                </div>
                 <h1 className="mt-6 text-balance text-4xl font-semibold tracking-tight text-ink-900 sm:text-5xl">
                   Hi, I’m <span className="text-accent-violet">{profile.name}</span>.
                 </h1>
@@ -48,30 +44,6 @@ function App() {
                   </a>
                 </div>
               </div>
-
-              <div className="rounded-3xl border border-ink-900/10 bg-paper-100 p-6 shadow-soft">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-semibold">Highlights</span>
-                </div>
-                <div className="mt-6 space-y-4">
-                  <div className="rounded-2xl bg-paper-50 p-4">
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm font-semibold">{projects.projects[0]?.title ?? 'Top project'}</span>
-                    </div>
-                    <p className="mt-2 text-sm text-ink-900/70">
-                      {projects.projects[0]?.description ?? 'A short, punchy outcome-driven description.'}
-                    </p>
-                  </div>
-                  <div className="rounded-2xl bg-paper-50 p-4">
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm font-semibold">{experience.roles[0]?.title ?? 'Recent role'}</span>
-                    </div>
-                    <p className="mt-2 text-sm text-ink-900/70">
-                      {(experience.roles[0]?.bullets ?? [])[0] ?? '2–3 bullets highlighting measurable results.'}
-                    </p>
-                  </div>
-                </div>
-              </div>
             </div>
           </Container>
         </section>
@@ -84,7 +56,7 @@ function App() {
               {experience.roles.map((r) => (
                 <article
                   key={`${r.company}-${r.title}-${r.start}`}
-                  className="rounded-2xl border border-ink-900/10 bg-paper-100 p-5 shadow-soft"
+                  className="hover-card rounded-2xl border border-ink-900/10 bg-paper-100 p-5 shadow-soft"
                 >
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div>
@@ -126,7 +98,7 @@ function App() {
             <p className="mt-2 text-ink-900/70">Selected projects from my resume.</p>
             <div className="mt-6 space-y-4">
               {projects.projects.map((p) => (
-                <article key={p.slug} className="rounded-2xl border border-ink-900/10 bg-paper-100 p-5 shadow-soft">
+                <article key={p.slug} className="hover-card rounded-2xl border border-ink-900/10 bg-paper-100 p-5 shadow-soft">
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <h3 className="text-sm font-semibold">{p.title}</h3>
                     <span className="text-xs text-ink-900/60">{formatMonthYear(p.date)}</span>
@@ -163,7 +135,7 @@ function App() {
             <h2 className="text-2xl font-semibold tracking-tight">Qualifications</h2>
             <p className="mt-2 text-ink-900/70">Education, leadership, and skills.</p>
             <div className="mt-6 space-y-4">
-              <div className="rounded-2xl border border-ink-900/10 bg-paper-100 p-5 shadow-soft">
+              <div className="hover-card rounded-2xl border border-ink-900/10 bg-paper-100 p-5 shadow-soft">
                 <h3 className="text-sm font-semibold">Education</h3>
                 <div className="mt-3 space-y-3">
                   {qualifications.education.map((e) => (
@@ -205,7 +177,7 @@ function App() {
                   ))}
                 </div>
               </div>
-              <div className="rounded-2xl border border-ink-900/10 bg-paper-100 p-5 shadow-soft">
+              <div className="hover-card rounded-2xl border border-ink-900/10 bg-paper-100 p-5 shadow-soft">
                 <h3 className="text-sm font-semibold">Skills</h3>
                 <div className="mt-3 space-y-4 text-sm">
                   {Object.entries(qualifications.skills).map(([k, arr]) => (
@@ -231,7 +203,7 @@ function App() {
 
         <section id="contact" className="py-16">
           <Container>
-            <div className="rounded-3xl border border-ink-900/10 bg-paper-100 p-8 shadow-soft sm:p-10">
+            <div className="hover-card rounded-3xl border border-ink-900/10 bg-paper-100 p-8 shadow-soft sm:p-10">
               <h2 className="text-2xl font-semibold tracking-tight">Contact</h2>
               <p className="mt-2 text-ink-900/70">Reach out — I’m happy to chat.</p>
               <div className="mt-6 flex flex-wrap gap-3">
