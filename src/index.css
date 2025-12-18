@@ -13,7 +13,13 @@
   }
 
   body {
-    @apply bg-paper-50 text-ink-900 antialiased;
+    @apply text-ink-900 antialiased;
+    background-color: #020617; /* near-black */
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+    background-size: 40px 40px;
+    background-position: -1px -1px;
   }
 
   a {
@@ -27,7 +33,7 @@
 
 @layer utilities {
   .hover-card {
-    @apply transition-colors duration-200 hover:bg-accent-violet/5;
+    @apply transition-none;
   }
 
   @keyframes fade-in-up {

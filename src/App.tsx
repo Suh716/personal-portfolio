@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react'
 import { Container } from './components/Container'
 import { Footer } from './components/Footer'
 import { Navbar } from './components/Navbar'
@@ -19,6 +20,63 @@ const formatMonthYear = (iso: string | undefined | null): string => {
 function App() {
   const { ageProgress, scrollProgress, scrollY } = useScrollAge()
   const parallaxOffset = -scrollY * 0.15
+  const videoRef = useRef<HTMLVideoElement | null>(null)
+  const [hasScrolled, setHasScrolled] = useState(false)
+  const [isScrolling, setIsScrolling] = useState(false)
+
+  // Track scroll activity to control background video playback
+  useEffect(() => {
+    let timeoutId: number | null = null
+
+    const handleScroll = () => {
+      setHasScrolled(true)
+      setIsScrolling(true)
+      if (timeoutId !== null) {
+        window.clearTimeout(timeoutId)
+      }
+      timeoutId = window.setTimeout(() => {
+        setIsScrolling(false)
+      }, 140)
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true })
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+      if (timeoutId !== null) {
+        window.clearTimeout(timeoutId)
+      }
+    }
+  }, [])
+
+  // Control video playback:
+  // - Always play on initial landing (before user scrolls)
+  // - After first scroll: play while scrolling, pause when stopped
+  useEffect(() => {
+    const video = videoRef.current
+    if (!video) return
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (prefersReducedMotion) {
+      video.pause()
+      return
+    }
+
+    if (!hasScrolled) {
+      if (video.paused) {
+        void video.play().catch(() => {})
+      }
+      return
+    }
+
+    if (isScrolling) {
+      if (video.paused) {
+        void video.play().catch(() => {})
+      }
+    } else {
+      video.pause()
+    }
+  }, [hasScrolled, isScrolling])
 
   return (
     <div className="relative min-h-screen">
@@ -29,16 +87,17 @@ function App() {
         muted
         loop
         playsInline
+        ref={videoRef}
       />
       <div
-        className="pointer-events-none fixed inset-0 z-[-10] bg-gradient-to-b from-ink-900/80 via-ink-900/50 to-ink-900/90"
+        className="pointer-events-none fixed inset-0 z-[-10] bg-gradient-to-b from-ink-900/80 via-ink-900/60 to-ink-900/90"
         style={{ transform: `translateY(${parallaxOffset}px)` }}
       />
 
       <Navbar />
       <PixelCompanion ageProgress={ageProgress} scrollProgress={scrollProgress} />
 
-      <main>
+      <main className="pl-16 sm:pl-20 lg:pl-24">
         <section className="py-16 sm:py-24">
           <Container>
             <div className="grid gap-10 lg:grid-cols-[1.2fr] lg:items-center">
@@ -65,8 +124,8 @@ function App() {
         <section id="experience" className="py-16 motion-safe:animate-fade-in-up">
           <Container>
             <RevealOnScroll>
-              <h2 className="text-2xl font-semibold tracking-tight">Experience</h2>
-              <p className="mt-2 text-ink-900/70">Recent roles and impact.</p>
+              <h2 className="text-2xl font-semibold tracking-tight text-accent-violet">Experience</h2>
+              <p className="mt-2 text-slate-200/80">Recent roles and impact.</p>
               <div className="mt-6 space-y-4">
                 {experience.roles.map((r, index) => (
                   <RevealOnScroll key={`${r.company}-${r.title}-${r.start}`} delayMs={index * 80}>
@@ -110,8 +169,8 @@ function App() {
         <section id="projects" className="py-16 motion-safe:animate-fade-in-up">
           <Container>
             <RevealOnScroll>
-              <h2 className="text-2xl font-semibold tracking-tight">Projects</h2>
-              <p className="mt-2 text-ink-900/70">Selected projects from my resume.</p>
+              <h2 className="text-2xl font-semibold tracking-tight text-accent-violet">Projects</h2>
+              <p className="mt-2 text-slate-200/80">Selected projects from my resume.</p>
               <div className="mt-6 space-y-4">
                 {projects.projects.map((p, index) => (
                   <RevealOnScroll key={p.slug} delayMs={index * 80}>
@@ -152,8 +211,8 @@ function App() {
         <section id="qualifications" className="py-16 motion-safe:animate-fade-in-up">
           <Container>
             <RevealOnScroll>
-              <h2 className="text-2xl font-semibold tracking-tight">Qualifications</h2>
-              <p className="mt-2 text-ink-900/70">Education, leadership, and skills.</p>
+              <h2 className="text-2xl font-semibold tracking-tight text-accent-violet">Qualifications</h2>
+              <p className="mt-2 text-slate-200/80">Education, leadership, and skills.</p>
             </RevealOnScroll>
             <div className="mt-6 space-y-4">
               <RevealOnScroll>
@@ -230,8 +289,8 @@ function App() {
           <Container>
             <RevealOnScroll>
               <div className="hover-card rounded-3xl border border-ink-900/10 bg-paper-100 p-8 shadow-soft sm:p-10">
-                <h2 className="text-2xl font-semibold tracking-tight">Contact</h2>
-                <p className="mt-2 text-ink-900/70">Reach out — I’m happy to chat.</p>
+                <h2 className="text-2xl font-semibold tracking-tight text-accent-violet">Contact</h2>
+                <p className="mt-2 text-ink-900">Reach out — I’m happy to chat.</p>
                 <div className="mt-6 flex flex-wrap gap-3">
                   <Button onClick={() => (window.location.href = `mailto:${profile.email}`)}>Email me</Button>
                   <Button

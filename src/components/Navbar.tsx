@@ -9,12 +9,12 @@ export function Navbar() {
   }
 
   return (
-    <header className="sticky top-0 z-40 border-b border-ink-900/10 bg-paper-50/85 backdrop-blur">
+    <header className="sticky top-0 z-40 border-b border-ink-900/10 bg-paper-50/90 text-ink-900 backdrop-blur">
       <Container>
         <div className="flex h-16 items-center justify-between">
           <a
             href="#"
-            className="font-semibold no-underline"
+            className="font-semibold no-underline text-ink-900"
             onClick={(e) => {
               e.preventDefault()
               window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -24,7 +24,7 @@ export function Navbar() {
           </a>
           <nav className="hidden items-center gap-2 sm:flex">
             <a
-              className="rounded-lg px-3 py-2 text-sm no-underline hover:bg-paper-200"
+              className="rounded-lg px-3 py-2 text-sm no-underline text-ink-900 hover:bg-paper-200"
               href="#projects"
               onClick={(e) => {
                 e.preventDefault()
@@ -34,7 +34,7 @@ export function Navbar() {
               Projects
             </a>
             <a
-              className="rounded-lg px-3 py-2 text-sm no-underline hover:bg-paper-200"
+              className="rounded-lg px-3 py-2 text-sm no-underline text-ink-900 hover:bg-paper-200"
               href="#experience"
               onClick={(e) => {
                 e.preventDefault()
@@ -44,7 +44,7 @@ export function Navbar() {
               Experience
             </a>
             <a
-              className="rounded-lg px-3 py-2 text-sm no-underline hover:bg-paper-200"
+              className="rounded-lg px-3 py-2 text-sm no-underline text-ink-900 hover:bg-paper-200"
               href="#qualifications"
               onClick={(e) => {
                 e.preventDefault()
@@ -54,7 +54,7 @@ export function Navbar() {
               Qualifications
             </a>
             <a
-              className="rounded-lg px-3 py-2 text-sm no-underline hover:bg-paper-200"
+              className="rounded-lg px-3 py-2 text-sm no-underline text-ink-900 hover:bg-paper-200"
               href="#contact"
               onClick={(e) => {
                 e.preventDefault()
