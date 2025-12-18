@@ -4,11 +4,10 @@
       "title": "MizuSkin – AI-Powered Social Skincare App",
       "slug": "mizuskin",
       "date": "2025-08",
-      "description": "iOS skincare app using SwiftUI and cloud functions to provide AI-powered recommendations, personalized routines, and social sharing features.",
+      "description": "Developed an iOS skincare app using SwiftUI, Azure Functions, and OpenAI API to provide AI-powered skincare recommendations, personalized routines, and social sharing features that increased user engagement and retention.",
       "highlights": [
-        "Built SwiftUI iOS app with an AI-backed recommendation flow.",
-        "Designed a cloud-integrated architecture with Azure Functions and storage services.",
-        "Implemented secure authentication and CI/CD pipelines."
+        "Designed a cloud-integrated architecture with a TypeScript (Node.js) backend, Azure Table Storage, and Azure Blob Storage to handle user routines and history at scale while keeping data access fast and reliable.",
+        "Implemented secure authentication and CI/CD pipelines so new features could be shipped quickly with automated builds, tests, and deployments."
       ],
       "tech": ["SwiftUI", "Azure Functions", "OpenAI API", "TypeScript", "Node.js", "Azure Table Storage", "Azure Blob Storage"],
       "links": {
@@ -20,11 +19,10 @@
       "title": "PhreekyNoises – Social Music Tracking App",
       "slug": "phreekynoises",
       "date": "2024-12",
-      "description": "Full-stack web app that tracks music habits via Spotify API, including authentication, music history, and friend connections.",
+      "description": "Implemented a full-stack web application using React, Node.js, HTML, CSS, and MySQL that lets users track their music habits and connects to the Spotify API to manage authentication, music history, and friend connections.",
       "highlights": [
-        "Integrated Spotify API for music history and profile data.",
-        "Implemented auth, database-backed history, and friend connections.",
-        "Managed development using an Agile Scrum board."
+        "Integrated the Spotify API to pull user listening history and profile data, persisting it in MySQL for charts and long-term insights.",
+        "Managed development tasks and feature implementations using an Agile Scrum board, coordinating sprints and iterative improvements across the project."
       ],
       "tech": ["React", "Node.js", "MySQL", "HTML", "CSS"],
       "links": {
