@@ -131,14 +131,15 @@ function App() {
                     <h3 className="text-sm font-semibold">{p.title}</h3>
                     <span className="text-xs text-ink-900/60">{formatMonthYear(p.date)}</span>
                   </div>
-                  <p className="mt-2 text-sm text-ink-900/70">{p.description}</p>
                   {p.highlights?.length ? (
-                    <ul className="mt-3 list-disc space-y-2 pl-5 text-xs text-ink-900/70">
+                    <ul className="mt-3 list-disc space-y-2 pl-5 text-sm text-ink-900/70">
                       {p.highlights.map((h) => (
                         <li key={h}>{h}</li>
                       ))}
                     </ul>
-                  ) : null}
+                  ) : (
+                    <p className="mt-2 text-sm text-ink-900/70">{p.description}</p>
+                  )}
                   {p.tech?.length ? (
                     <div className="mt-3 flex flex-wrap gap-2">
                       {p.tech.slice(0, 8).map((t) => (
