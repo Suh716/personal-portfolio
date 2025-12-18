@@ -1,7 +1,11 @@
 import { useEffect, useState, useRef } from 'react'
 
 // Import the character image and walk frames
-import characterImg from '../assets/pixel/character.png'
+import characterHero from '../assets/pixel/character.png'
+import characterExperience from '../assets/pixel/experience.png'
+import characterProjects from '../assets/pixel/projects.png'
+import characterQualifications from '../assets/pixel/qualifications.png'
+import characterContact from '../assets/pixel/contact.png'
 import walk00 from '../assets/pixel/walk_00.png'
 import walk01 from '../assets/pixel/walk_01.png'
 import walk02 from '../assets/pixel/walk_02.png'
@@ -9,6 +13,13 @@ import walk03 from '../assets/pixel/walk_03.png'
 
 const WALK_FRAMES = [walk00, walk01, walk02, walk03]
 const NUM_WALK_FRAMES = WALK_FRAMES.length
+const ZONE_SPRITES = [
+  characterHero,
+  characterExperience,
+  characterProjects,
+  characterQualifications,
+  characterContact,
+] as const
 
 interface PixelCompanionProps {
   ageProgress: number // 0.0 = youngest (oldest events), 1.0 = oldest (most recent)
@@ -21,6 +32,8 @@ export function PixelCompanion({ ageProgress, scrollProgress }: PixelCompanionPr
   const [targetPosition, setTargetPosition] = useState(0) // Target top offset in px (where character should be)
   const [currentPosition, setCurrentPosition] = useState(0) // Current character top offset in px (independent entity)
   const [zoneOffsets, setZoneOffsets] = useState<number[]>([]) // Anchors for [hero, experience, projects, qualifications, contact]
+  const [targetZoneIndex, setTargetZoneIndex] = useState(0)
+  const [currentZoneIndex, setCurrentZoneIndex] = useState(0)
   const [isScrolling, setIsScrolling] = useState(false)
   const scrollTimeoutRef = useRef<number | null>(null)
   const animationFrameRef = useRef<number | null>(null)
@@ -68,14 +81,16 @@ export function PixelCompanion({ ageProgress, scrollProgress }: PixelCompanionPr
       addZone(document.getElementById('qualifications') as HTMLElement | null)
       addZone(document.getElementById('contact') as HTMLElement | null)
 
-      if (zones.length) {
-        setZoneOffsets(zones)
-        // Initialize character at the first zone on first load
-        if (currentPosition === 0 && targetPosition === 0) {
-          setCurrentPosition(zones[0])
-          setTargetPosition(zones[0])
+        if (zones.length) {
+          setZoneOffsets(zones)
+          // Initialize character at the first zone on first load
+          if (currentPosition === 0 && targetPosition === 0) {
+            setCurrentPosition(zones[0])
+            setTargetPosition(zones[0])
+            setCurrentZoneIndex(0)
+            setTargetZoneIndex(0)
+          }
         }
-      }
     }
 
     computeZones()
@@ -105,8 +120,10 @@ export function PixelCompanion({ ageProgress, scrollProgress }: PixelCompanionPr
 
       // If scrolled all the way to the bottom, snap to contact zone (last one)
       if (docHeight - scrollBottom < 48 && zoneOffsets.length > 0) {
-        const contactTop = zoneOffsets[zoneOffsets.length - 1]
+        const contactIndex = zoneOffsets.length - 1
+        const contactTop = zoneOffsets[contactIndex]
         setTargetPosition(contactTop)
+        setTargetZoneIndex(contactIndex)
         return
       }
 
@@ -140,6 +157,7 @@ export function PixelCompanion({ ageProgress, scrollProgress }: PixelCompanionPr
 
       const targetTop = zoneOffsets[bestIndex] ?? zoneOffsets[0]
       setTargetPosition(targetTop)
+      setTargetZoneIndex(bestIndex)
     }, 60)
 
     return () => {
@@ -162,8 +180,8 @@ export function PixelCompanion({ ageProgress, scrollProgress }: PixelCompanionPr
     }
 
     // Character walks toward target with smooth easing (handles large jumps across sections)
-    const maxStep = 22 // max px per frame
-    const minStep = 2 // min px per frame when moving
+    const maxStep = 26 // max px per frame
+    const minStep = 3 // min px per frame when moving
     const minDistance = 1.5 // px: minimum distance to consider \"caught up\"
 
     const animate = () => {
@@ -198,6 +216,16 @@ export function PixelCompanion({ ageProgress, scrollProgress }: PixelCompanionPr
       }
     }
   }, [targetPosition, isScrolling, prefersReducedMotion])
+
+  // When character reaches the target zone, update currentZoneIndex so sprite can transform
+  useEffect(() => {
+    if (!zoneOffsets.length) return
+    const threshold = 6 // px
+    const targetY = zoneOffsets[targetZoneIndex]
+    if (Math.abs(currentPosition - targetY) < threshold) {
+      setCurrentZoneIndex(targetZoneIndex)
+    }
+  }, [currentPosition, targetZoneIndex, zoneOffsets])
 
   // Animate walking cycle only when character is actively moving to catch up
   useEffect(() => {
@@ -234,7 +262,8 @@ export function PixelCompanion({ ageProgress, scrollProgress }: PixelCompanionPr
   // Select frame: use walking animation when actively moving to catch up
   const isWalking =
     !isScrolling && Math.abs(targetPosition - currentPosition) > 0.01 && scrollProgress > 0.02 && !prefersReducedMotion
-  const displayFrame = isWalking ? WALK_FRAMES[walkFrame] : characterImg
+  const staticSprite = ZONE_SPRITES[currentZoneIndex] ?? ZONE_SPRITES[0]
+  const displayFrame = isWalking ? WALK_FRAMES[walkFrame] : staticSprite
 
   return (
     <aside
@@ -254,10 +283,12 @@ export function PixelCompanion({ ageProgress, scrollProgress }: PixelCompanionPr
               ? `Character walking to the current section (age progress ${(ageProgress * 100).toFixed(0)}%)`
               : `Character at age progress ${(ageProgress * 100).toFixed(0)}%`
           }
-          className="h-auto w-28 object-contain"
+          className="h-auto w-32 object-contain"
           style={{
             imageRendering: 'pixelated',
             filter: ageFilter,
+            transition: 'transform 200ms ease-out, opacity 200ms ease-out, filter 300ms ease-out',
+            transform: isWalking ? 'scale(1.0)' : 'scale(1.06)',
           }}
         />
       </div>
