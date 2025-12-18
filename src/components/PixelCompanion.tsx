@@ -109,7 +109,7 @@ export function PixelCompanion({ ageProgress, scrollProgress }: PixelCompanionPr
       clearTimeout(scrollTimeoutRef.current)
     }
 
-    // Set new timeout - scrolling stops after a short delay of no scroll events
+    // Set new timeout - scrolling stops right after scroll events finish (no visible delay)
     scrollTimeoutRef.current = window.setTimeout(() => {
       setIsScrolling(false)
       const doc = document.documentElement
@@ -158,7 +158,7 @@ export function PixelCompanion({ ageProgress, scrollProgress }: PixelCompanionPr
       const targetTop = zoneOffsets[bestIndex] ?? zoneOffsets[0]
       setTargetPosition(targetTop)
       setTargetZoneIndex(bestIndex)
-    }, 60)
+    }, 0)
 
     return () => {
       if (scrollTimeoutRef.current !== null) {
@@ -260,8 +260,9 @@ export function PixelCompanion({ ageProgress, scrollProgress }: PixelCompanionPr
     : `brightness(${0.95 + ageProgress * 0.1}) contrast(${1.0 - ageProgress * 0.05}) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1))`
 
   // Select frame: use walking animation when actively moving to catch up
+  const distanceToTarget = Math.abs(targetPosition - currentPosition)
   const isWalking =
-    !isScrolling && Math.abs(targetPosition - currentPosition) > 0.01 && scrollProgress > 0.02 && !prefersReducedMotion
+    !isScrolling && distanceToTarget > 4 && scrollProgress > 0.02 && !prefersReducedMotion
   const staticSprite = ZONE_SPRITES[currentZoneIndex] ?? ZONE_SPRITES[0]
   const displayFrame = isWalking ? WALK_FRAMES[walkFrame] : staticSprite
 
@@ -287,8 +288,8 @@ export function PixelCompanion({ ageProgress, scrollProgress }: PixelCompanionPr
           style={{
             imageRendering: 'pixelated',
             filter: ageFilter,
-            transition: 'transform 200ms ease-out, opacity 200ms ease-out, filter 300ms ease-out',
-            transform: isWalking ? 'scale(1.0)' : 'scale(1.06)',
+            // Keep transform constant to avoid any flicker when switching sprites
+            transition: 'opacity 150ms ease-out, filter 300ms ease-out',
           }}
         />
       </div>
