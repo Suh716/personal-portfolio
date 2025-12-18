@@ -139,7 +139,7 @@ function App() {
           <Container>
             <h2 className="text-2xl font-semibold tracking-tight">Qualifications</h2>
             <p className="mt-2 text-ink-900/70">Education, leadership, and skills.</p>
-            <div className="mt-6 grid gap-4 lg:grid-cols-2">
+            <div className="mt-6 space-y-4">
               <div className="rounded-2xl border border-ink-900/10 bg-paper-100 p-5 shadow-soft">
                 <h3 className="text-sm font-semibold">Education</h3>
                 <div className="mt-3 space-y-3">
@@ -150,7 +150,34 @@ function App() {
                         <span className="text-xs text-ink-900/60">{e.end ?? ''}</span>
                       </div>
                       <p className="mt-1 text-sm text-ink-900/70">{e.degree}</p>
-                      {e.notes?.length ? <p className="mt-2 text-xs text-ink-900/60">{e.notes[0]}</p> : null}
+                      {(() => {
+                        if (!e.notes?.length) return null
+                        const courseworkNote =
+                          e.notes.find((note) => note.toLowerCase().includes('coursework')) ?? e.notes[0]
+                        const cleaned = courseworkNote.replace(/^[Rr]elevant Coursework:\s*/, '')
+                        const courses = cleaned
+                          .split(',')
+                          .map((c) => c.trim())
+                          .filter(Boolean)
+                        if (!courses.length) return null
+                        return (
+                          <div className="mt-3">
+                            <div className="text-xs font-semibold uppercase tracking-wide text-ink-900/60">
+                              Coursework
+                            </div>
+                            <div className="mt-2 flex flex-wrap gap-2">
+                              {courses.map((course) => (
+                                <span
+                                  key={course}
+                                  className="rounded-full border border-ink-900/10 bg-paper-50 px-2.5 py-1 text-xs text-ink-900/70"
+                                >
+                                  {course}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        )
+                      })()}
                     </div>
                   ))}
                 </div>
