@@ -13,12 +13,24 @@ export function RevealOnScroll({ children, delayMs = 0 }: RevealOnScrollProps) {
     const el = ref.current
     if (!el) return
 
+    let timeoutId: number | null = null
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            window.setTimeout(() => setIsVisible(true), delayMs)
-            observer.disconnect()
+            if (timeoutId !== null) {
+              window.clearTimeout(timeoutId)
+            }
+            timeoutId = window.setTimeout(() => {
+              setIsVisible(true)
+            }, delayMs)
+          } else {
+            if (timeoutId !== null) {
+              window.clearTimeout(timeoutId)
+              timeoutId = null
+            }
+            setIsVisible(false)
           }
         })
       },
@@ -29,7 +41,12 @@ export function RevealOnScroll({ children, delayMs = 0 }: RevealOnScrollProps) {
 
     observer.observe(el)
 
-    return () => observer.disconnect()
+    return () => {
+      if (timeoutId !== null) {
+        window.clearTimeout(timeoutId)
+      }
+      observer.disconnect()
+    }
   }, [delayMs])
 
   return (
