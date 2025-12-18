@@ -15,11 +15,15 @@ const formatMonthYear = (iso: string | undefined | null): string => {
 }
 
 function App() {
-  const { ageProgress, scrollProgress } = useScrollAge()
+  const { ageProgress, scrollProgress, scrollY } = useScrollAge()
+  const parallaxOffset = -scrollY * 0.15
 
   return (
     <div className="relative min-h-screen bg-paper-50">
-      <div className="pointer-events-none fixed inset-x-0 top-0 h-40 bg-gradient-to-b from-accent-violet/10 via-accent-cyan/5 to-transparent" />
+      <div
+        className="pointer-events-none fixed inset-x-0 top-0 h-40 bg-gradient-to-b from-accent-violet/15 via-accent-cyan/5 to-transparent"
+        style={{ transform: `translateY(${parallaxOffset}px)` }}
+      />
 
       <Navbar />
       <PixelCompanion ageProgress={ageProgress} scrollProgress={scrollProgress} />

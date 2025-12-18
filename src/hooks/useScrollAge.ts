@@ -1,12 +1,15 @@
 import { useEffect, useState } from 'react'
 
 /**
- * Hook that maps scroll position to age progress and scroll progress.
- * Returns both values for the pixel companion.
+ * Hook that maps scroll position to:
+ * - ageProgress: 0.0–1.0 (younger at bottom)
+ * - scrollProgress: 0.0–1.0 (top to bottom)
+ * - scrollY: raw scroll offset in px (for parallax)
  */
-export function useScrollAge(): { ageProgress: number; scrollProgress: number } {
+export function useScrollAge(): { ageProgress: number; scrollProgress: number; scrollY: number } {
   const [ageProgress, setAgeProgress] = useState(0)
   const [scrollProgress, setScrollProgress] = useState(0)
+  const [scrollY, setScrollY] = useState(0)
 
   useEffect(() => {
     let rafId: number | null = null
@@ -15,15 +18,15 @@ export function useScrollAge(): { ageProgress: number; scrollProgress: number } 
     const updateProgress = () => {
       const scrollContainer = document.documentElement
       const scrollHeight = scrollContainer.scrollHeight - scrollContainer.clientHeight
-      const scrollY = window.scrollY
+      const currentY = window.scrollY
 
       // Only update if scroll position changed significantly (performance optimization)
-      if (Math.abs(scrollY - lastScrollY) < 1) {
+      if (Math.abs(currentY - lastScrollY) < 1) {
         rafId = requestAnimationFrame(updateProgress)
         return
       }
 
-      lastScrollY = scrollY
+      lastScrollY = currentY
 
       if (scrollHeight <= 0) {
         setAgeProgress(0)
@@ -33,7 +36,7 @@ export function useScrollAge(): { ageProgress: number; scrollProgress: number } 
       }
 
       // Map scroll progress (0.0 = top, 1.0 = bottom)
-      const newScrollProgress = scrollY / scrollHeight
+      const newScrollProgress = currentY / scrollHeight
 
       // Map scroll progress to age progress
       // 0.0 = at top (most recent accomplishments) = oldest character
@@ -43,6 +46,7 @@ export function useScrollAge(): { ageProgress: number; scrollProgress: number } 
 
       setAgeProgress(newAgeProgress)
       setScrollProgress(newScrollProgress)
+      setScrollY(currentY)
       rafId = requestAnimationFrame(updateProgress)
     }
 
@@ -68,5 +72,5 @@ export function useScrollAge(): { ageProgress: number; scrollProgress: number } 
     }
   }, [])
 
-  return { ageProgress, scrollProgress }
+  return { ageProgress, scrollProgress, scrollY }
 }
