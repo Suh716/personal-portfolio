@@ -20,10 +20,7 @@ export function Navbar() {
               window.scrollTo({ top: 0, behavior: 'smooth' })
             }}
           >
-            <span className="inline-flex items-center gap-2">
-              <span className="inline-block h-2.5 w-2.5 rounded-full bg-accent-violet" />
-              <span>{profile.name}</span>
-            </span>
+            <span>{profile.name}</span>
           </a>
           <nav className="hidden items-center gap-2 sm:flex">
             <a

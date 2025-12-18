@@ -99,6 +99,18 @@ function App() {
                       <li key={b}>{b}</li>
                     ))}
                   </ul>
+                  {r.tech?.length ? (
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {r.tech.slice(0, 14).map((t) => (
+                        <span
+                          key={t}
+                          className="rounded-full border border-ink-900/10 bg-paper-50 px-2.5 py-1 text-xs text-ink-900/70"
+                        >
+                          {t}
+                        </span>
+                      ))}
+                    </div>
+                  ) : null}
                 </article>
               ))}
             </div>
@@ -117,6 +129,13 @@ function App() {
                     <span className="text-xs text-ink-900/60">{p.date}</span>
                   </div>
                   <p className="mt-2 text-sm text-ink-900/70">{p.description}</p>
+                  {p.highlights?.length ? (
+                    <ul className="mt-3 list-disc space-y-2 pl-5 text-xs text-ink-900/70">
+                      {p.highlights.map((h) => (
+                        <li key={h}>{h}</li>
+                      ))}
+                    </ul>
+                  ) : null}
                   {p.tech?.length ? (
                     <div className="mt-3 flex flex-wrap gap-2">
                       {p.tech.slice(0, 8).map((t) => (
