@@ -42,6 +42,7 @@ export function PixelCompanion({ ageProgress, scrollProgress }: PixelCompanionPr
     const computeZones = () => {
       const root = document.getElementById('root')
       const rootTop = root ? root.getBoundingClientRect().top + window.scrollY : 0
+      const zoneYOffset = 96 // offset below each header so character stands slightly under the title
 
       const zones: number[] = []
 
@@ -51,7 +52,7 @@ export function PixelCompanion({ ageProgress, scrollProgress }: PixelCompanionPr
       const addZone = (el: HTMLElement | null) => {
         if (!el) return
         const rect = el.getBoundingClientRect()
-        const y = rect.top + window.scrollY - rootTop
+        const y = rect.top + window.scrollY - rootTop + zoneYOffset
         zones.push(y)
       }
 
@@ -96,23 +97,48 @@ export function PixelCompanion({ ageProgress, scrollProgress }: PixelCompanionPr
     // Set new timeout - scrolling stops after a short delay of no scroll events
     scrollTimeoutRef.current = window.setTimeout(() => {
       setIsScrolling(false)
-      // Determine which zone header is closest to the viewport center
-      const root = document.getElementById('root')
-      const rootTop = root ? root.getBoundingClientRect().top + window.scrollY : 0
-      const viewportCenter = window.scrollY + window.innerHeight / 2
-      const relativeCenter = viewportCenter - rootTop
+      const doc = document.documentElement
+      const viewportTop = window.scrollY
+      const viewportBottom = viewportTop + window.innerHeight
+      const scrollBottom = viewportBottom
+      const docHeight = doc.scrollHeight
 
-      let closestIndex = 0
-      let closestDistance = Infinity
-      zoneOffsets.forEach((offset, index) => {
-        const distance = Math.abs(offset - relativeCenter)
-        if (distance < closestDistance) {
-          closestDistance = distance
-          closestIndex = index
+      // If scrolled all the way to the bottom, snap to contact zone (last one)
+      if (docHeight - scrollBottom < 48 && zoneOffsets.length > 0) {
+        const contactTop = zoneOffsets[zoneOffsets.length - 1]
+        setTargetPosition(contactTop)
+        return
+      }
+
+      // Otherwise, choose the section that occupies the most of the viewport height
+      const main = document.querySelector('main')
+      const heroSection = main?.querySelector('section') as HTMLElement | null
+      const sections: HTMLElement[] = []
+      if (heroSection) sections.push(heroSection)
+      ;['experience', 'projects', 'qualifications', 'contact'].forEach((id) => {
+        const el = document.getElementById(id) as HTMLElement | null
+        if (el) sections.push(el)
+      })
+
+      let bestIndex = 0
+      let bestVisible = -1
+
+      sections.forEach((el, index) => {
+        const rect = el.getBoundingClientRect()
+        const sectionTop = rect.top + window.scrollY
+        const sectionBottom = sectionTop + rect.height
+
+        const visibleTop = Math.max(sectionTop, viewportTop)
+        const visibleBottom = Math.min(sectionBottom, viewportBottom)
+        const visibleHeight = Math.max(0, visibleBottom - visibleTop)
+
+        if (visibleHeight > bestVisible) {
+          bestVisible = visibleHeight
+          bestIndex = index
         }
       })
 
-      const targetTop = zoneOffsets[closestIndex]
+      const targetTop = zoneOffsets[bestIndex] ?? zoneOffsets[0]
       setTargetPosition(targetTop)
     }, 60)
 
