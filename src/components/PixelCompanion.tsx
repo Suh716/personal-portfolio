@@ -180,8 +180,8 @@ export function PixelCompanion({ ageProgress, scrollProgress }: PixelCompanionPr
     }
 
     // Character walks toward target with smooth easing (handles large jumps across sections)
-    const maxStep = 26 // max px per frame
-    const minStep = 3 // min px per frame when moving
+    const maxStep = 18 // max px per frame (a bit slower for smoother motion)
+    const minStep = 2 // min px per frame when moving
     const minDistance = 1.5 // px: minimum distance to consider \"caught up\"
 
     const animate = () => {

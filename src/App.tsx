@@ -6,6 +6,14 @@ import { PixelCompanion } from './components/PixelCompanion'
 import { useScrollAge } from './hooks/useScrollAge'
 import { experience, profile, projects, qualifications } from './content/load'
 
+const formatMonthYear = (iso: string | undefined | null): string => {
+  if (!iso) return ''
+  const [year, month] = iso.split('-')
+  if (!year || !month) return iso
+  const mm = month.padStart(2, '0')
+  return `${mm}/${year}`
+}
+
 function App() {
   const { ageProgress, scrollProgress } = useScrollAge()
 
@@ -44,15 +52,11 @@ function App() {
               <div className="rounded-3xl border border-ink-900/10 bg-paper-100 p-6 shadow-soft">
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-semibold">Highlights</span>
-                  <span className="text-xs text-ink-900/60">coming from JSON</span>
                 </div>
                 <div className="mt-6 space-y-4">
                   <div className="rounded-2xl bg-paper-50 p-4">
                     <div className="flex items-center justify-between">
                       <span className="text-sm font-semibold">{projects.projects[0]?.title ?? 'Top project'}</span>
-                      <span className="text-xs text-accent-cyan">
-                        {(projects.projects[0]?.tech ?? []).slice(0, 2).join(' • ') || 'React • TS'}
-                      </span>
                     </div>
                     <p className="mt-2 text-sm text-ink-900/70">
                       {projects.projects[0]?.description ?? 'A short, punchy outcome-driven description.'}
@@ -61,7 +65,6 @@ function App() {
                   <div className="rounded-2xl bg-paper-50 p-4">
                     <div className="flex items-center justify-between">
                       <span className="text-sm font-semibold">{experience.roles[0]?.title ?? 'Recent role'}</span>
-                      <span className="text-xs text-accent-rose">Impact</span>
                     </div>
                     <p className="mt-2 text-sm text-ink-900/70">
                       {(experience.roles[0]?.bullets ?? [])[0] ?? '2–3 bullets highlighting measurable results.'}
@@ -90,7 +93,7 @@ function App() {
                       </h3>
                       <p className="mt-1 text-xs text-ink-900/60">
                         {r.location ? `${r.location} · ` : ''}
-                        {r.start} – {r.end ?? 'Present'}
+                        {formatMonthYear(r.start)} – {r.end ? formatMonthYear(r.end) : 'Present'}
                       </p>
                     </div>
                   </div>
@@ -126,7 +129,7 @@ function App() {
                 <article key={p.slug} className="rounded-2xl border border-ink-900/10 bg-paper-100 p-5 shadow-soft">
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <h3 className="text-sm font-semibold">{p.title}</h3>
-                    <span className="text-xs text-ink-900/60">{p.date}</span>
+                    <span className="text-xs text-ink-900/60">{formatMonthYear(p.date)}</span>
                   </div>
                   <p className="mt-2 text-sm text-ink-900/70">{p.description}</p>
                   {p.highlights?.length ? (
@@ -166,7 +169,7 @@ function App() {
                     <div key={`${e.school}-${e.degree}`} className="rounded-xl bg-paper-50 p-4">
                       <div className="flex flex-wrap items-center justify-between gap-2">
                         <span className="text-sm font-semibold">{e.school}</span>
-                        <span className="text-xs text-ink-900/60">{e.end ?? ''}</span>
+                        <span className="text-xs text-ink-900/60">{formatMonthYear(e.end)}</span>
                       </div>
                       <p className="mt-1 text-sm text-ink-900/70">{e.degree}</p>
                       {(() => {
