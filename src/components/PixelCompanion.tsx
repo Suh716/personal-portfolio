@@ -268,7 +268,7 @@ export function PixelCompanion({ ageProgress, scrollProgress }: PixelCompanionPr
 
   return (
     <aside
-      className="pointer-events-none absolute z-30 hidden lg:block"
+      className="pointer-events-none absolute z-30 block"
       style={{
         left: `${fixedLeftPosition}px`,
         top: `${topOffset}px`,
@@ -284,7 +284,7 @@ export function PixelCompanion({ ageProgress, scrollProgress }: PixelCompanionPr
               ? `Character walking to the current section (age progress ${(ageProgress * 100).toFixed(0)}%)`
               : `Character at age progress ${(ageProgress * 100).toFixed(0)}%`
           }
-          className="h-auto w-32 object-contain"
+          className="h-auto w-20 sm:w-24 lg:w-32 object-contain"
           style={{
             imageRendering: 'pixelated',
             filter: ageFilter,
