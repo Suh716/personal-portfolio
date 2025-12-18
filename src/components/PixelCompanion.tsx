@@ -93,7 +93,7 @@ export function PixelCompanion({ ageProgress, scrollProgress }: PixelCompanionPr
       clearTimeout(scrollTimeoutRef.current)
     }
 
-    // Set new timeout - scrolling stops after 200ms of no scroll events
+    // Set new timeout - scrolling stops after a short delay of no scroll events
     scrollTimeoutRef.current = window.setTimeout(() => {
       setIsScrolling(false)
       // Determine which zone header is closest to the viewport center
@@ -114,7 +114,7 @@ export function PixelCompanion({ ageProgress, scrollProgress }: PixelCompanionPr
 
       const targetTop = zoneOffsets[closestIndex]
       setTargetPosition(targetTop)
-    }, 200)
+    }, 80)
 
     return () => {
       if (scrollTimeoutRef.current !== null) {
@@ -136,8 +136,8 @@ export function PixelCompanion({ ageProgress, scrollProgress }: PixelCompanionPr
     }
 
     // Character walks at a fixed speed (pixels per frame) to catch up
-    const walkSpeed = 8 // px per frame
-    const minDistance = 2 // px: minimum distance to consider "caught up"
+    const walkSpeed = 18 // px per frame (faster so it catches up quickly)
+    const minDistance = 4 // px: minimum distance to consider "caught up"
 
     const animate = () => {
       setCurrentPosition((prev) => {
