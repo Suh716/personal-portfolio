@@ -31,6 +31,7 @@ function App() {
   const [hasScrolled, setHasScrolled] = useState(false)
   const [isScrolling, setIsScrolling] = useState(false)
   const [expandedProject, setExpandedProject] = useState<string | null>(null)
+  const expandedProjectScrollY = useRef<number>(0)
 
   // Track scroll activity to control background video playback
   useEffect(() => {
@@ -86,12 +87,27 @@ function App() {
     }
   }, [hasScrolled, isScrolling])
 
-  // Collapse expanded project when scrolling
+  // Track scroll position when project expands
+  useEffect(() => {
+    if (expandedProject) {
+      expandedProjectScrollY.current = window.scrollY
+    }
+  }, [expandedProject])
+
+  // Collapse expanded project only on significant scroll
   useEffect(() => {
     if (!expandedProject) return
 
+    const scrollThreshold = 150 // pixels - minimum scroll distance before collapsing
+
     const handleScroll = () => {
-      setExpandedProject(null)
+      const currentScrollY = window.scrollY
+      const scrollDelta = Math.abs(currentScrollY - expandedProjectScrollY.current)
+
+      // Only collapse if scroll distance from initial position exceeds threshold
+      if (scrollDelta > scrollThreshold) {
+        setExpandedProject(null)
+      }
     }
 
     window.addEventListener('scroll', handleScroll, { passive: true })
