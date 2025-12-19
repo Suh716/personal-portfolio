@@ -262,10 +262,10 @@ function App() {
               <RevealOnScroll delayMs={80}>
                 <div className="hover-card rounded-2xl border border-ink-900/10 bg-paper-100 p-5 shadow-soft">
                   <h3 className="text-sm font-semibold">Skills</h3>
-                  <div className="mt-3 space-y-4 text-sm">
+                  <div className="mt-3 space-y-6 text-sm">
                     {Object.entries(qualifications.skills).map(([k, arr]) => (
                       <div key={k}>
-                        <div className="text-xs font-semibold uppercase tracking-wide text-ink-900/60">{k}</div>
+                        <div className="text-xs font-semibold uppercase tracking-wide text-ink-900/60 mb-2">{k}</div>
                         <div className="mt-2 flex flex-wrap gap-2">
                           {(arr ?? []).slice(0, 14).map((s) => (
                             <span
