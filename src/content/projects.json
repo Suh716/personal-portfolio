@@ -4,10 +4,10 @@
       "title": "MizuSkin – AI-Powered Social Skincare App",
       "slug": "mizuskin",
       "date": "2025-08",
-      "description": "Developed an iOS skincare app using SwiftUI, Azure Functions, and OpenAI API to provide AI-powered skincare recommendations, personalized routines, and social sharing features.",
+      "description": "Deployed an iOS skincare app using SwiftUI with Azure Functions (TypeScript/Node.js) backend; implemented JWT-based authentication, stored structured app data in Azure Table Storage, and managed user-generated media in Azure Blob Storage.",
       "highlights": [
-        "Developed an iOS skincare app using SwiftUI, Azure Functions, and OpenAI API to provide AI-powered skincare recommendations, personalized routines, and social sharing features that boosted user engagement and retention.",
-        "Designed a cloud-integrated architecture with a TypeScript (Node.js) backend, Azure Table Storage, and Azure Blob Storage, plus CI/CD pipelines, achieving scalable data handling and secure authentication."
+        "Deployed an iOS skincare app using SwiftUI with Azure Functions (TypeScript/Node.js) backend; implemented JWT-based authentication, stored structured app data in Azure Table Storage, and managed user-generated media in Azure Blob Storage.",
+        "Built an ingredient compatibility engine over a 2.6K+ ingredient dataset, using ingredient normalization + Levenshtein-based fuzzy matching and a weighted scoring model to produce compatibility scores, warnings, and routine/product recommendations."
       ],
       "tech": ["SwiftUI", "Azure Functions", "OpenAI API", "TypeScript", "Node.js", "Azure Table Storage", "Azure Blob Storage"],
       "links": {
