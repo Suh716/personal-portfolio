@@ -30,6 +30,7 @@ function App() {
   const videoRef = useRef<HTMLVideoElement | null>(null)
   const [hasScrolled, setHasScrolled] = useState(false)
   const [isScrolling, setIsScrolling] = useState(false)
+  const [expandedProject, setExpandedProject] = useState<string | null>(null)
 
   // Track scroll activity to control background video playback
   useEffect(() => {
@@ -84,6 +85,18 @@ function App() {
       video.pause()
     }
   }, [hasScrolled, isScrolling])
+
+  // Collapse expanded project when scrolling
+  useEffect(() => {
+    if (!expandedProject) return
+
+    const handleScroll = () => {
+      setExpandedProject(null)
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [expandedProject])
 
   return (
     <div className="relative min-h-screen">
@@ -178,38 +191,51 @@ function App() {
             <RevealOnScroll>
               <h2 className="text-2xl font-semibold tracking-tight text-accent-violet">Projects</h2>
               <p className="mt-2 text-slate-200/80">Selected projects from my resume.</p>
-              <div className="mt-6 space-y-4">
-                {projects.projects.map((p, index) => (
-                  <RevealOnScroll key={p.slug} delayMs={index * 80}>
-                    <article className="hover-card rounded-2xl border border-ink-900/10 bg-paper-100 p-5 shadow-soft">
-                      <div className="flex flex-wrap items-center justify-between gap-2">
-                        <h3 className="text-sm font-semibold">{p.title}</h3>
-                        <span className="text-xs text-ink-900/60">{formatMonthYear(p.date)}</span>
-                      </div>
-                      {p.highlights?.length ? (
-                        <ul className="mt-3 list-disc space-y-2 pl-5 text-sm text-ink-900/70">
-                          {p.highlights.map((h) => (
-                            <li key={h}>{h}</li>
-                          ))}
-                        </ul>
-                      ) : (
-                        <p className="mt-2 text-sm text-ink-900/70">{p.description}</p>
-                      )}
-                      {p.tech?.length ? (
-                        <div className="mt-3 flex flex-wrap gap-2">
-                          {p.tech.slice(0, 8).map((t) => (
-                            <span
-                              key={t}
-                              className="rounded-full border border-ink-900/10 bg-paper-50 px-2.5 py-1 text-xs text-ink-900/70"
-                            >
-                              {t}
-                            </span>
-                          ))}
+              <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {projects.projects.map((p, index) => {
+                  const isExpanded = expandedProject === p.slug
+                  return (
+                    <RevealOnScroll key={p.slug} delayMs={index * 80}>
+                      <article
+                        className={`hover-card cursor-pointer rounded-2xl border border-ink-900/10 bg-paper-100 p-5 shadow-soft transition-all duration-300 ${
+                          isExpanded ? 'md:col-span-2 lg:col-span-3' : ''
+                        }`}
+                        onClick={() => {
+                          setExpandedProject(isExpanded ? null : p.slug)
+                        }}
+                      >
+                        <div className="flex flex-wrap items-center justify-between gap-2">
+                          <h3 className="text-sm font-semibold">{p.title}</h3>
+                          <span className="text-xs text-ink-900/60">{formatMonthYear(p.date)}</span>
                         </div>
-                      ) : null}
-                    </article>
-                  </RevealOnScroll>
-                ))}
+                        <p className="mt-2 text-sm text-ink-900/70 line-clamp-2">{p.description}</p>
+                        {isExpanded && (
+                          <div className="mt-4 space-y-4 animate-fade-in-up">
+                            {p.highlights?.length ? (
+                              <ul className="list-disc space-y-2 pl-5 text-sm text-ink-900/70">
+                                {p.highlights.map((h) => (
+                                  <li key={h}>{h}</li>
+                                ))}
+                              </ul>
+                            ) : null}
+                            {p.tech?.length ? (
+                              <div className="flex flex-wrap gap-2">
+                                {p.tech.map((t) => (
+                                  <span
+                                    key={t}
+                                    className="rounded-full border border-ink-900/10 bg-paper-50 px-2.5 py-1 text-xs text-ink-900/70"
+                                  >
+                                    {t}
+                                  </span>
+                                ))}
+                              </div>
+                            ) : null}
+                          </div>
+                        )}
+                      </article>
+                    </RevealOnScroll>
+                  )
+                })}
               </div>
             </RevealOnScroll>
           </Container>
