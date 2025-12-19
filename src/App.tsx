@@ -292,7 +292,9 @@ function App() {
                 <h2 className="text-2xl font-semibold tracking-tight text-accent-violet">Contact</h2>
                 <p className="mt-2 text-ink-900">Reach out — I’m happy to chat.</p>
                 <div className="mt-6 flex flex-wrap gap-3">
-                  <Button onClick={() => (window.location.href = `mailto:${profile.email}`)}>Email me</Button>
+                  <a href={`mailto:${profile.email}`} className="inline-flex">
+                    <Button type="button">Email me</Button>
+                  </a>
                   <Button
                     variant="ghost"
                     onClick={() => window.open(profile.links.github ?? 'https://github.com/', '_blank')}
